@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">EntainNextToGo</string>
+    <string name="title">Next To Go Racing</string>
+    <string name="horse">Horse</string>
+    <string name="harness">Harness</string>
+    <string name="gray_hound">Gray Hound</string>
+    <string name="error_message">Oh! Something went wrong</string>
+    <string name="minitue">m</string>
+    <string name="seconds">s</string>
+</resources>
