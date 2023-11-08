@@ -8,13 +8,13 @@ import com.entain.next.data.dto.ResponseDto
 import com.entain.next.data.local.NextToGoEntity
 import com.entain.next.domain.model.Categories
 import com.entain.next.domain.util.Resource
+import com.entain.next.util.currentTimeToSeconds
 
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import retrofit2.Response
-import kotlin.time.Duration.Companion.seconds
 
 class NextToGoRepositoryTest {
 
@@ -99,7 +99,7 @@ class NextToGoRepositoryTest {
                         "1", RaceSummaryDto(
                             race_id = "1",
                             race_number = "1",
-                            advertised_start = AdvertisedStartDto(System.currentTimeMillis().seconds.inWholeSeconds + 3L),
+                            advertised_start = AdvertisedStartDto(currentTimeToSeconds() + 3L),
                             category_id = "harness",
                             meeting_name = "name"
                         )
@@ -117,7 +117,7 @@ class NextToGoRepositoryTest {
             adCategory = Categories.Harness,
             raceNumber = "1",
             name = "tes",
-            adStartTimeInSeconds = System.currentTimeMillis().seconds.inWholeSeconds - 65L
+            adStartTimeInSeconds = currentTimeToSeconds() - 65L
         )
     )
 
@@ -127,7 +127,7 @@ class NextToGoRepositoryTest {
             adCategory = Categories.Harness,
             raceNumber = "1",
             name = "tes",
-            adStartTimeInSeconds = System.currentTimeMillis().seconds.inWholeSeconds + 65L
+            adStartTimeInSeconds = currentTimeToSeconds() + 65L
         )
     )
 }

@@ -8,10 +8,10 @@ import com.entain.next.data.mapper.toNextToGoEntity
 import com.entain.next.domain.model.NextToGo
 import com.entain.next.domain.util.Resource
 import com.entain.next.util.SECONDS
+import com.entain.next.util.currentTimeToSeconds
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.Response
-import kotlin.time.Duration.Companion.seconds
 
 class FakeNextToGoRepository : NextToGoRepository {
 
@@ -81,14 +81,14 @@ class FakeNextToGoRepository : NextToGoRepository {
 
         return racing.all {
             val remaining =
-                (it.adStartTimeInSeconds - System.currentTimeMillis().seconds.inWholeSeconds)
+                (it.adStartTimeInSeconds - currentTimeToSeconds())
             remaining < -SECONDS
         }
     }
 
     private fun cleaUpAllExpiredEvent() {
         val expiredData = dbData
-            .filter { (it.adStartTimeInSeconds - System.currentTimeMillis().seconds.inWholeSeconds) <= -SECONDS }
+            .filter { (it.adStartTimeInSeconds - currentTimeToSeconds()) <= -SECONDS }
         expiredData.forEach {
             dbData.remove(it)
         }

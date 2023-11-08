@@ -6,16 +6,15 @@ import com.entain.next.domain.model.NextToGo
 import com.entain.next.domain.repository.NextToGoRepository
 import com.entain.next.domain.util.Resource
 import com.entain.next.presentation.data.RaceOrder
+import com.entain.next.util.currentTimeToSeconds
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import kotlin.time.Duration.Companion.seconds
 
 class NextToGoRacingTest {
 
@@ -137,42 +136,42 @@ class NextToGoRacingTest {
             adCategory = Categories.Harness,
             raceNumber = "1",
             name = "harness 1",
-            adStartTimeInSeconds = System.currentTimeMillis().seconds.inWholeSeconds + 65L
+            adStartTimeInSeconds = currentTimeToSeconds() + 65L
         ),
         NextToGo(
             raceId = "horse",
             adCategory = Categories.Horse,
             raceNumber = "1",
             name = "horse 1",
-            adStartTimeInSeconds = System.currentTimeMillis().seconds.inWholeSeconds + 60L
+            adStartTimeInSeconds = currentTimeToSeconds() + 60L
         ),
         NextToGo(
             raceId = "grayhound",
             adCategory = Categories.GrayHound,
             raceNumber = "1",
             name = "grayhound 1",
-            adStartTimeInSeconds = System.currentTimeMillis().seconds.inWholeSeconds + 55L
+            adStartTimeInSeconds = currentTimeToSeconds() + 55L
         ),
         NextToGo(
             raceId = "harness 2",
             adCategory = Categories.Harness,
             raceNumber = "2",
             name = "tes 2",
-            adStartTimeInSeconds = System.currentTimeMillis().seconds.inWholeSeconds + 165L
+            adStartTimeInSeconds = currentTimeToSeconds() + 165L
         ),
         NextToGo(
             raceId = "harness 3",
             adCategory = Categories.Harness,
             raceNumber = "1",
             name = "tes",
-            adStartTimeInSeconds = System.currentTimeMillis().seconds.inWholeSeconds + 265L
+            adStartTimeInSeconds = currentTimeToSeconds() + 265L
         ),
         NextToGo(
             raceId = "harness 3",
             adCategory = Categories.Harness,
             raceNumber = "1",
             name = "tes",
-            adStartTimeInSeconds = System.currentTimeMillis().seconds.inWholeSeconds + 365L
+            adStartTimeInSeconds = currentTimeToSeconds() + 365L
         )
     )
 }

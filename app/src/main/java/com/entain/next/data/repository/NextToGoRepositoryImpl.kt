@@ -11,11 +11,10 @@ import com.entain.next.domain.model.NextToGo
 import com.entain.next.domain.repository.NextToGoRepository
 import com.entain.next.domain.util.Resource
 import com.entain.next.util.SECONDS
-import com.entain.next.util.SECOND_IN_MILL_SECOND
+import com.entain.next.util.currentTimeToSeconds
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.seconds
 
 class NextToGoRepositoryImpl @Inject constructor(
     private val api: EntainApi,
@@ -80,11 +79,11 @@ class NextToGoRepositoryImpl @Inject constructor(
     }
 
     private fun hasExpiredRacing(racing: List<NextToGoEntity>) =
-        racing.all { (it.adStartTimeInSeconds - System.currentTimeMillis().seconds.inWholeSeconds) < -SECONDS }
+        racing.all { (it.adStartTimeInSeconds - currentTimeToSeconds()) < -SECONDS }
 
     private suspend fun cleaUpAllExpiredEvent() {
         val expiredData = localDb.getNextToGo()
-            .filter { (it.adStartTimeInSeconds - System.currentTimeMillis().seconds.inWholeSeconds) <= -SECONDS }
+            .filter { (it.adStartTimeInSeconds - currentTimeToSeconds()) <= -SECONDS }
         expiredData.forEach {
             localDb.delete(it)
         }

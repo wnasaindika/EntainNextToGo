@@ -19,3 +19,7 @@ fun formatToDate(seconds: Long): String? {
     val formatter = SimpleDateFormat(YYYY_MM_DD_HH_MM, Locale.getDefault())
     return formatter.format(calender.time)
 }
+
+fun currentTimeToSeconds(): Long {
+    return (System.currentTimeMillis() / SECOND_IN_MILL_SECOND)
+}

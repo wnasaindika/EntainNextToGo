@@ -23,7 +23,7 @@ import com.entain.next.R
 import com.entain.next.domain.model.Categories
 import com.entain.next.domain.model.NextToGo
 import com.entain.next.util.ContentDescriptionUtil
-import com.entain.next.util.SECOND_IN_MILL_SECOND
+import com.entain.next.util.currentTimeToSeconds
 
 @Composable
 fun RacingItem(
@@ -61,7 +61,7 @@ fun RacingItem(
             },
             trailingContent = {
                 AnimatedText(
-                    time = nextToGo.adStartTimeInSeconds - (System.currentTimeMillis() / SECOND_IN_MILL_SECOND)
+                    time = nextToGo.adStartTimeInSeconds - currentTimeToSeconds()
                 ) {
                     onRaceExpired.invoke(nextToGo)
                 }
@@ -88,7 +88,7 @@ fun ShowRacingItem() {
     RacingItem(
         nextToGo = NextToGo(
             name = "Test Name",
-            adStartTimeInSeconds = (System.currentTimeMillis() / SECOND_IN_MILL_SECOND) + 200L,
+            adStartTimeInSeconds = currentTimeToSeconds() + 200L,
             raceNumber = "10",
             adCategory = Categories.Harness,
             raceId = "abc",

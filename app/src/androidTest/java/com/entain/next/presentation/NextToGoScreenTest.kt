@@ -33,6 +33,7 @@ import com.entain.next.domain.model.NextToGo
 import com.entain.next.domain.util.Resource
 import com.entain.next.ui.EntainTheme
 import com.entain.next.util.ContentDescriptionUtil
+import com.entain.next.util.currentTimeToSeconds
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -41,7 +42,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalMaterial3Api::class)
 @HiltAndroidTest
@@ -168,42 +168,42 @@ class NextToGoScreenTest {
             adCategory = Categories.Harness,
             raceNumber = "1",
             name = "harness 1",
-            adStartTimeInSeconds = System.currentTimeMillis().seconds.inWholeSeconds + 65L
+            adStartTimeInSeconds = currentTimeToSeconds() + 65L
         ),
         NextToGo(
             raceId = "2",
             adCategory = Categories.Horse,
             raceNumber = "1",
             name = "horse 1",
-            adStartTimeInSeconds = System.currentTimeMillis().seconds.inWholeSeconds + 60L
+            adStartTimeInSeconds = currentTimeToSeconds() + 60L
         ),
         NextToGo(
             raceId = "3",
             adCategory = Categories.GrayHound,
             raceNumber = "1",
             name = "grayhound 1",
-            adStartTimeInSeconds = System.currentTimeMillis().seconds.inWholeSeconds + 55L
+            adStartTimeInSeconds = currentTimeToSeconds() + 55L
         ),
         NextToGo(
             raceId = "4",
             adCategory = Categories.Harness,
             raceNumber = "2",
             name = "tes 2",
-            adStartTimeInSeconds = System.currentTimeMillis().seconds.inWholeSeconds + 165L
+            adStartTimeInSeconds = currentTimeToSeconds() + 165L
         ),
         NextToGo(
             raceId = "5",
             adCategory = Categories.Harness,
             raceNumber = "1",
             name = "tes",
-            adStartTimeInSeconds = System.currentTimeMillis().seconds.inWholeSeconds + 265L
+            adStartTimeInSeconds = currentTimeToSeconds() + 265L
         ),
         NextToGo(
             raceId = "6",
             adCategory = Categories.Harness,
             raceNumber = "1",
             name = "tes",
-            adStartTimeInSeconds = System.currentTimeMillis().seconds.inWholeSeconds + 365L
+            adStartTimeInSeconds = currentTimeToSeconds() + 365L
         )
     )
 }
