@@ -40,14 +40,14 @@ class MainActivity : ComponentActivity() {
                 var optionVisibility by remember {
                     mutableStateOf(false)
                 }
-                Surface(color = MaterialTheme.colorScheme.background) {
+                Surface(color = MaterialTheme.colorScheme.primary) {
                     Scaffold(
                         topBar = {
                             CenterAlignedTopAppBar(
                                 title = {
                                     Text(
                                         text = stringResource(id = R.string.title),
-                                        style = MaterialTheme.typography.titleLarge,
+                                        style = MaterialTheme.typography.headlineMedium,
                                     )
                                 },
                                 actions = {

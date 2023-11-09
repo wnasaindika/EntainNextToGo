@@ -1,5 +1,6 @@
 package com.entain.next.presentation.component
 
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -16,11 +17,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.entain.next.R
 import com.entain.next.domain.model.Categories
 import com.entain.next.domain.model.NextToGo
@@ -40,14 +39,12 @@ fun RacingItem(
     }
 
     Surface(
-        color = Color.Transparent,
-        modifier = Modifier.clip(MaterialTheme.shapes.medium)
+        color = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.defaultMinSize(minHeight = 80.dp),
+        shadowElevation = 5.dp
     ) {
         ListItem(
-            colors = ListItemDefaults.colors(
-                containerColor = Color.Transparent,
-                overlineColor = Color.Transparent
-            ),
             headlineContent = {
                 Text(
                     nextToGo.name,
@@ -58,7 +55,7 @@ fun RacingItem(
             supportingContent = {
                 Text(
                     "${stringResource(id = R.string.race_number)} ${nextToGo.raceNumber}",
-                    style = MaterialTheme.typography.labelLarge
+                    style = MaterialTheme.typography.titleSmall
                 )
             },
             trailingContent = {

@@ -82,19 +82,20 @@ fun EntainTheme(
     content: @Composable() () -> Unit
 ) {
     // uncomment if you wanted to us dynamic color or light theme
-    val context = LocalContext.current
-    val colors = when {
-        (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) -> {
-            if (useDarkTheme) dynamicDarkColorScheme(context)
-            else dynamicLightColorScheme(context)
+    /*
+        val context = LocalContext.current
+        val colors = when {
+            (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) -> {
+                if (useDarkTheme) dynamicDarkColorScheme(context)
+                else dynamicLightColorScheme(context)
+            }
+            useDarkTheme -> DarkColors
+            else -> LightColors
         }
-
-        useDarkTheme -> DarkColors
-        else -> LightColors
-    }
+    */
 
     MaterialTheme(
-        colorScheme = colors,
+        colorScheme = DarkColors,
         content = content,
         typography = typography,
         shapes = shapes
