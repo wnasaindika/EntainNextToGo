@@ -1,5 +1,5 @@
 ## Build tools & versions used
-  ### The app required folllowing libaries to build the project 
+  ### The app required following libraries to build the project 
 
      -  Kotlin version 1.9.10
      -  Gradle version 8.0
@@ -9,53 +9,45 @@
      -  Retrofit version 2.9.0
      -  Coil for image cahcing 
      -  Terbine for flow testing 
-     -  Matirial 3 for UI design 
-     -  ...etc 
+     -  Matirial 3 for UI design
 
 ## Steps to run the app
 
      - Git pull or download source code
      - Sync All libaries 
      - Press Run (select real device/emulator)
-     - Press filters for sorting 
-     - Pull down for fresh data 
-     - If errors Restrat WiFi on device    
 
 ## What areas of the app did you focus on?
-
-  ### areas of focuse
-  - clean code 
-  - single data source
-  - high cohesion and less coupling in in compose
+  ### design for requirements  
+  ### areas of focus
+  - clean architecture 
+  - app theming 
+  - MVVM architecture
+  - reduce network request with caching
   - SOLID principle 
   - scalability 
-  - maintainibility 
+  - maintainability 
 
-## What was the reason for your focus? What problems were you trying to solve?
+### problems trying to solve
 
-
-  ### problems trying to solve
-
-   - fetching data from network with retrofit
-   - timer on list
-   - limit 5 items in list
-   - filter's with combinations  
-   - minimum requrment for the given time  
+   - fetching data from network with retrofit and providing single data source 
+   - timer on the racing list
+   - limit network request when race event expired 
+   - list refreshed   
+   - limit race event with filters 
+   - full fill the given requirements 
 
 ## How long did you spend on this project?
-- 5 -6 hrs finshing the task (UI and Architecture) 
+ - 5 - 6 hrs finshing the task (UI and Architecture) 
+ - 2 - 3 hrs for bug fixing/optimization and doucmentation 
+
+## The weakest part of your project
+ - minimum size for any race is 5, if the remote api return less then 5 items apps will throw an error (this avoid race condition if the server return less than 5 element for any count)
  
-## Did you make any trade-offs for this project? What would you have done differently with more time?
+## dependencies list
 
-
-## What do you think is the weakest part of your project?
-
-The program is optimized for API levels 26 and higher. Setting up Compse Kotlin with Java 17 can be difficult for beginners; therefore, raising the minimum supported development kit to 26 will simplify the application's configuration. 
-
-## Did you copy any code or dependencies? Please make sure to attribute them here!
- - Matirial 3 Design Guideline
- - Animations from previous projet   
- - I always use this skulton for all my projects for dependencies 
+ - Matirial 3 Design with Jetpack Compse
+ - Android dependencies and project listed below 
 
 ```
     val composeBom = platform("androidx.compose:compose-bom:2023.09.02")
@@ -125,8 +117,10 @@ The program is optimized for API levels 26 and higher. Setting up Compse Kotlin�
     //retorfit test
     testImplementation("com.squareup.okhttp3:mockwebserver:5.0.0-alpha.11")
 ```
+## Running test
+ - right click androidTest folder -> press Run All test
+ - right click test folder -> press Run All test
 
-## Is there any other information you’d like us to know?
+## Troubleshooting
+- If the app throwing errors when launching, please restart wifi on your device.
 
-- If the app throwing errors when starting, please restart wifi on your device.
-- Have not included end to end test 
