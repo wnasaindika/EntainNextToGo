@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.entain.next.R
 import com.entain.next.presentation.data.RaceSelectState
+import com.entain.next.presentation.event_mapper.RaceCombinations
 import com.entain.next.ui.EntainTheme
 import com.entain.next.util.ContentDescriptionUtil
 
@@ -115,13 +116,7 @@ fun RacingFilterItem(
 @Composable
 fun ShowRacingFilters() {
     EntainTheme {
-        RacingFilters(
-            RaceSelectState(
-                horseSelected = false,
-                grayHoundSelected = false,
-                harnessSelected = false
-            )
-        ) {
+        RacingFilters(RaceCombinations.getNoRaceSelected) {
 
         }
     }

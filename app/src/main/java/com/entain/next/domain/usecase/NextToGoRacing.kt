@@ -29,6 +29,9 @@ class NextToGoRacing @Inject constructor(private val nextToGoRepository: NextToG
         val grayHound = sortedList.filter { it.adCategory == Categories.GrayHound }
         val harness = sortedList.filter { it.adCategory == Categories.Harness }
 
+        if (horse.count() < 5 || grayHound.count() < 5 || harness.count() < 5)
+            return emptyList()
+
         return when (raceOrder) {
             RaceOrder.Horse -> horse.take(MAX_ITEMS_IN_LIST)
             RaceOrder.Harness -> harness.take(MAX_ITEMS_IN_LIST)

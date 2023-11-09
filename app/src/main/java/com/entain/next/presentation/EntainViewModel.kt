@@ -10,6 +10,7 @@ import com.entain.next.presentation.data.RaceEvent
 import com.entain.next.presentation.data.RaceOrder
 import com.entain.next.presentation.data.RaceSelectState
 import com.entain.next.presentation.data.UiState
+import com.entain.next.presentation.event_mapper.RaceCombinations
 import com.entain.next.presentation.event_mapper.raceOrderMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,15 +30,7 @@ class EntainViewModel @Inject constructor(private val nextToGoRacing: NextToGoRa
         get() = _uiState.asStateFlow()
 
     init {
-        onRaceEvents(
-            RaceEvent.SelectRace(
-                RaceSelectState(
-                    horseSelected = true,
-                    grayHoundSelected = true,
-                    harnessSelected = true
-                )
-            )
-        )
+        onRaceEvents(RaceEvent.SelectRace(RaceCombinations.getAllRacing))
     }
 
     fun onRaceEvents(event: RaceEvent) {

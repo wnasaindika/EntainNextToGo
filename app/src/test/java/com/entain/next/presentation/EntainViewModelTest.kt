@@ -41,7 +41,7 @@ class EntainViewModelTest {
     }
 
     @Test
-    fun `verify use case invoke and removed expired event called when view model init`() {
+    fun `verify use case invoke method called when view model init`() {
         dispatcher.scheduler.advanceUntilIdle()
         coVerify(exactly = 1) {
             repo.invoke(any())

@@ -28,24 +28,22 @@ class NextToGoRacingTest {
     }
 
     @Test
-    fun `test max limit 5 racing events when user filter by all`() = runTest {
-        coEvery { fakeRepository.fetchNextToGoRacing() } returns flowOf(
-            Resource.Success(
-                fakeData()
+    fun `test max limit is five for racing events when user filter by any racing event`() =
+        runTest {
+            coEvery { fakeRepository.fetchNextToGoRacing() } returns flowOf(
+                Resource.Success(
+                    fakeData()
+                )
             )
-        )
-        nextToGoRacing.invoke(RaceOrder.ALL).test {
-            val item1 = awaitItem()
-            assertEquals(5, item1.data?.count())
-            assertEquals("grayhound 1", item1.data?.get(0)?.meetingName)
-            assertEquals("horse 1", item1.data?.get(1)?.meetingName)
-            assertEquals("harness 1", item1.data?.get(2)?.meetingName)
-            awaitComplete()
+            nextToGoRacing.invoke(RaceOrder.ALL).test {
+                val item1 = awaitItem()
+                assertEquals(5, item1.data?.count())
+                awaitComplete()
+            }
         }
-    }
 
     @Test
-    fun `test harness racing events when user filter by harness`() = runTest {
+    fun `test returning only harness racing events when user filter by harness`() = runTest {
         coEvery { fakeRepository.fetchNextToGoRacing() } returns flowOf(
             Resource.Success(
                 fakeData()
@@ -53,13 +51,14 @@ class NextToGoRacingTest {
         )
         nextToGoRacing.invoke(RaceOrder.Harness).test {
             val item1 = awaitItem()
-            assertEquals(4, item1.data?.count())
+            assertEquals(5, item1.data?.count())
+            assertEquals(true, item1.data?.all { it.adCategory == Categories.Harness })
             awaitComplete()
         }
     }
 
     @Test
-    fun `test horse racing events when user filter by horse`() = runTest {
+    fun `test returning only horse racing events when user filter by horse`() = runTest {
         coEvery { fakeRepository.fetchNextToGoRacing() } returns flowOf(
             Resource.Success(
                 fakeData()
@@ -67,13 +66,14 @@ class NextToGoRacingTest {
         )
         nextToGoRacing.invoke(RaceOrder.Horse).test {
             val item1 = awaitItem()
-            assertEquals(1, item1.data?.count())
+            assertEquals(5, item1.data?.count())
+            assertEquals(true, item1.data?.all { it.adCategory == Categories.Horse })
             awaitComplete()
         }
     }
 
     @Test
-    fun `test gray hound racing events when user filter by gray hound`() = runTest {
+    fun `test returning only gray hound racing events when user filter by gray hound`() = runTest {
         coEvery { fakeRepository.fetchNextToGoRacing() } returns flowOf(
             Resource.Success(
                 fakeData()
@@ -81,13 +81,14 @@ class NextToGoRacingTest {
         )
         nextToGoRacing.invoke(RaceOrder.GrayHound).test {
             val item1 = awaitItem()
-            assertEquals(1, item1.data?.count())
+            assertEquals(5, item1.data?.count())
+            assertEquals(true, item1.data?.all { it.adCategory == Categories.GrayHound })
             awaitComplete()
         }
     }
 
     @Test
-    fun `test gray hound and horse racing events when user filter by gray hound and horse`() =
+    fun `test returning only gray hound and horse racing events when user filter by gray hound and horse`() =
         runTest {
             coEvery { fakeRepository.fetchNextToGoRacing() } returns flowOf(
                 Resource.Success(
@@ -96,7 +97,23 @@ class NextToGoRacingTest {
             )
             nextToGoRacing.invoke(RaceOrder.HorseAndGrayHound).test {
                 val item1 = awaitItem()
-                assertEquals(2, item1.data?.count())
+                assertEquals(5, item1.data?.count())
+                assertEquals(false, item1.data?.any { it.adCategory == Categories.Harness })
+                awaitComplete()
+            }
+        }
+
+    @Test
+    fun `test returning a empty racing events when any event has the size of less than five racing events`() =
+        runTest {
+            coEvery { fakeRepository.fetchNextToGoRacing() } returns flowOf(
+                Resource.Success(
+                    fakeData(true)
+                )
+            )
+            nextToGoRacing.invoke(RaceOrder.HorseAndGrayHound).test {
+                val item1 = awaitItem()
+                assertEquals(0, item1.data?.count())
                 awaitComplete()
             }
         }
@@ -116,7 +133,7 @@ class NextToGoRacingTest {
     }
 
     @Test
-    fun `test delete expired event when remove expired event from cache`() = runTest {
+    fun `test delete expired event when user remove expired event from cache`() = runTest {
         coEvery { fakeRepository.fetchNextToGoRacing() } returns flowOf(
             Resource.Success(
                 fakeData()
@@ -130,48 +147,38 @@ class NextToGoRacingTest {
     }
 
 
-    private fun fakeData() = listOf(
-        NextToGo(
-            raceId = "harness",
-            adCategory = Categories.Harness,
-            raceNumber = "1",
-            meetingName = "harness 1",
-            adStartTimeInSeconds = currentTimeToSeconds() + 65L
-        ),
-        NextToGo(
-            raceId = "horse",
-            adCategory = Categories.Horse,
-            raceNumber = "1",
-            meetingName = "horse 1",
-            adStartTimeInSeconds = currentTimeToSeconds() + 60L
-        ),
-        NextToGo(
-            raceId = "grayhound",
-            adCategory = Categories.GrayHound,
-            raceNumber = "1",
-            meetingName = "grayhound 1",
-            adStartTimeInSeconds = currentTimeToSeconds() + 55L
-        ),
-        NextToGo(
-            raceId = "harness 2",
-            adCategory = Categories.Harness,
-            raceNumber = "2",
-            meetingName = "tes 2",
-            adStartTimeInSeconds = currentTimeToSeconds() + 165L
-        ),
-        NextToGo(
-            raceId = "harness 3",
-            adCategory = Categories.Harness,
-            raceNumber = "1",
-            meetingName = "tes",
-            adStartTimeInSeconds = currentTimeToSeconds() + 265L
-        ),
-        NextToGo(
-            raceId = "harness 3",
-            adCategory = Categories.Harness,
-            raceNumber = "1",
-            meetingName = "tes",
-            adStartTimeInSeconds = currentTimeToSeconds() + 365L
-        )
-    )
+    private fun fakeData(reduceSizeEnable: Boolean = false): List<NextToGo> {
+        val harness = (0..6).map {
+            NextToGo(
+                raceId = "harness $it",
+                adCategory = Categories.Harness,
+                raceNumber = "id$it",
+                meetingName = "harness $it",
+                adStartTimeInSeconds = currentTimeToSeconds() + 65L + it * 2
+            )
+        }
+
+        val horse = (0..6).map {
+            NextToGo(
+                raceId = "horse $it",
+                adCategory = Categories.Horse,
+                raceNumber = "id$it",
+                meetingName = "horse $it",
+                adStartTimeInSeconds = currentTimeToSeconds() + 66L + it * 3
+            )
+        }
+
+        val grayHound = (0..6).map {
+            NextToGo(
+                raceId = "horse $it",
+                adCategory = Categories.GrayHound,
+                raceNumber = "id$it",
+                meetingName = "horse $it",
+                adStartTimeInSeconds = currentTimeToSeconds() + 67L + it * 4
+            )
+        }
+
+
+        return horse + grayHound + if (reduceSizeEnable) harness.take(1) else harness
+    }
 }
