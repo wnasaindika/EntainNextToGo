@@ -27,13 +27,16 @@ class TestAppModule {
                 return fakeNextToGoDataSource.getFakeData()
             }
 
-
             override suspend fun clearLocalCache() {
                 fakeNextToGoDataSource.clearLocalCache()
             }
 
             override suspend fun deleteExpiredEvent(nextToGo: NextToGo?) {
                 fakeNextToGoDataSource.deleteExpiredEvent(nextToGo)
+            }
+
+            override suspend fun deleteExpiredEvents() {
+                fakeNextToGoDataSource.deleteExpiredEvents()
             }
 
         }

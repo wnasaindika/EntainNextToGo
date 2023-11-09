@@ -75,18 +75,17 @@ class NextToGoRepositoryImpl @Inject constructor(
         nextToGo?.toNextToGo()?.let {
             localDb.delete(it)
         }
-        cleaUpAllExpiredEvent()
     }
 
-    private fun hasExpiredRacing(racing: List<NextToGoEntity>) =
-        racing.all { (it.adStartTimeInSeconds - currentTimeToSeconds()) < -SECONDS }
-
-    private suspend fun cleaUpAllExpiredEvent() {
+    override suspend fun deleteExpiredEvents() {
         val expiredData = localDb.getNextToGo()
             .filter { (it.adStartTimeInSeconds - currentTimeToSeconds()) <= -SECONDS }
         expiredData.forEach {
             localDb.delete(it)
         }
     }
+
+    private fun hasExpiredRacing(racing: List<NextToGoEntity>) =
+        racing.all { (it.adStartTimeInSeconds - currentTimeToSeconds()) < -SECONDS }
 
 }

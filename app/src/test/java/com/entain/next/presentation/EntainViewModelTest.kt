@@ -27,6 +27,7 @@ class EntainViewModelTest {
         vm = EntainViewModel(repo)
         coEvery { repo.invoke(any()) } returns flow { emit(Resource.Loading()) }
         coEvery { repo.removeExpiredEventFromCache(any()) } returns Unit
+        coEvery { repo.checkAndRemoveExpiredEvents() } returns Unit
     }
 
     @After
@@ -44,9 +45,6 @@ class EntainViewModelTest {
         dispatcher.scheduler.advanceUntilIdle()
         coVerify(exactly = 1) {
             repo.invoke(any())
-        }
-        coVerify(exactly = 1) {
-            repo.removeExpiredEventFromCache(any())
         }
     }
 }

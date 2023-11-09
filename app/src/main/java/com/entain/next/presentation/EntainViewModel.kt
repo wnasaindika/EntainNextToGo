@@ -8,6 +8,7 @@ import com.entain.next.domain.usecase.NextToGoRacing
 import com.entain.next.domain.util.Resource
 import com.entain.next.presentation.data.RaceEvent
 import com.entain.next.presentation.data.RaceOrder
+import com.entain.next.presentation.data.RaceSelectState
 import com.entain.next.presentation.data.UiState
 import com.entain.next.presentation.event_mapper.raceOrderMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,47 +29,53 @@ class EntainViewModel @Inject constructor(private val nextToGoRacing: NextToGoRa
         get() = _uiState.asStateFlow()
 
     init {
-        fetchRacingData(RaceOrder.ALL, null)
+        onRaceEvents(
+            RaceEvent.SelectRace(
+                RaceSelectState(
+                    horseSelected = true,
+                    grayHoundSelected = true,
+                    harnessSelected = true
+                )
+            )
+        )
     }
 
     fun onRaceEvents(event: RaceEvent) {
-        when (event) {
-            is RaceEvent.Refresh -> {
-                viewModelScope.launch {
+        viewModelScope.launch {
+            nextToGoRacing.checkAndRemoveExpiredEvents()
+            when (event) {
+                is RaceEvent.Refresh -> {
                     nextToGoRacing.refresh(RaceOrder.ALL)
                 }
-            }
 
-            is RaceEvent.SelectRace -> {
-                fetchRacingData(raceOrder = raceOrderMapper(event.selectState), null)
-            }
-
-            is RaceEvent.ExpiredRace -> {
-                fetchRacingData(raceOrder = raceOrderMapper(event.selectState), event.nextToGo)
-            }
-        }
-    }
-
-    private fun fetchRacingData(raceOrder: RaceOrder, nextToGo: NextToGo?) {
-        viewModelScope.launch {
-            nextToGoRacing.removeExpiredEventFromCache(nextToGo)
-            nextToGoRacing.invoke(raceOrder).onEach {
-                when (it) {
-                    is Resource.Loading -> {
-                        if (it.isLoading)
-                            _uiState.emit(UiState.Loading)
-                    }
-
-                    is Resource.Error -> {
-                        _uiState.emit(UiState.Error)
-                    }
-
-                    is Resource.Success -> {
-                        _uiState.emit(UiState.Success(it.data ?: emptyList(), raceOrder))
-                    }
+                is RaceEvent.SelectRace -> {
+                    fetchRacingData(raceOrder = raceOrderMapper(event.selectState))
                 }
-            }.collect()
+
+                is RaceEvent.ExpiredRace -> {
+                    nextToGoRacing.removeExpiredEventFromCache(event.nextToGo)
+                    fetchRacingData(raceOrder = raceOrderMapper(event.selectState))
+                }
+            }
         }
     }
 
+    private suspend fun fetchRacingData(raceOrder: RaceOrder) {
+        nextToGoRacing.invoke(raceOrder).onEach {
+            when (it) {
+                is Resource.Loading -> {
+                    if (it.isLoading)
+                        _uiState.emit(UiState.Loading)
+                }
+
+                is Resource.Error -> {
+                    _uiState.emit(UiState.Error)
+                }
+
+                is Resource.Success -> {
+                    _uiState.emit(UiState.Success(it.data ?: emptyList(), raceOrder))
+                }
+            }
+        }.collect()
+    }
 }

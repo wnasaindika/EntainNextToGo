@@ -5,6 +5,7 @@ import com.entain.next.domain.model.NextToGo
 import com.entain.next.domain.repository.NextToGoRepository
 import com.entain.next.domain.util.Resource
 import com.entain.next.presentation.data.RaceOrder
+import com.entain.next.util.MAX_ITEMS_IN_LIST
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -27,29 +28,29 @@ class NextToGoRacing @Inject constructor(private val nextToGoRepository: NextToG
     }
 
     private fun getSortedList(raceOrder: RaceOrder, sortedList: List<NextToGo>): List<NextToGo> {
-        val maxItem = 5
         val horse = sortedList.filter { it.adCategory == Categories.Horse }
         val grayHound = sortedList.filter { it.adCategory == Categories.GrayHound }
         val harness = sortedList.filter { it.adCategory == Categories.Harness }
 
         return when (raceOrder) {
-            RaceOrder.Horse -> horse.take(maxItem)
-            RaceOrder.Harness -> harness.take(maxItem)
-            RaceOrder.GrayHound -> grayHound.take(maxItem)
+            RaceOrder.Horse -> horse.take(MAX_ITEMS_IN_LIST)
+            RaceOrder.Harness -> harness.take(MAX_ITEMS_IN_LIST)
+            RaceOrder.GrayHound -> grayHound.take(MAX_ITEMS_IN_LIST)
             RaceOrder.HorseAndHarness -> {
-                (horse + harness).sortedBy { it.adStartTimeInSeconds }.take(maxItem)
+                (horse + harness).sortedBy { it.adStartTimeInSeconds }.take(MAX_ITEMS_IN_LIST)
             }
 
             RaceOrder.HorseAndGrayHound -> {
-                (horse + grayHound).sortedBy { it.adStartTimeInSeconds }.take(maxItem)
+                (horse + grayHound).sortedBy { it.adStartTimeInSeconds }.take(MAX_ITEMS_IN_LIST)
             }
 
             RaceOrder.HarnessAndGrayHound -> {
-                (harness + grayHound).sortedBy { it.adStartTimeInSeconds }.take(maxItem)
+                (harness + grayHound).sortedBy { it.adStartTimeInSeconds }.take(MAX_ITEMS_IN_LIST)
             }
 
             RaceOrder.ALL -> {
-                (horse + harness + grayHound).sortedBy { it.adStartTimeInSeconds }.take(maxItem)
+                (horse + harness + grayHound).sortedBy { it.adStartTimeInSeconds }
+                    .take(MAX_ITEMS_IN_LIST)
             }
 
             RaceOrder.None -> emptyList()
@@ -63,5 +64,9 @@ class NextToGoRacing @Inject constructor(private val nextToGoRepository: NextToG
 
     suspend fun removeExpiredEventFromCache(nextToGo: NextToGo?) {
         nextToGoRepository.deleteExpiredEvent(nextToGo)
+    }
+
+    suspend fun checkAndRemoveExpiredEvents() {
+        nextToGoRepository.deleteExpiredEvents()
     }
 }

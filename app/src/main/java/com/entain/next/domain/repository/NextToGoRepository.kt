@@ -8,4 +8,6 @@ interface NextToGoRepository {
     suspend fun getNextToGoRacingSummery(): Flow<Resource<List<NextToGo>>>
     suspend fun clearLocalCache()
     suspend fun deleteExpiredEvent(nextToGo: NextToGo?)
+
+    suspend fun  deleteExpiredEvents()
 }

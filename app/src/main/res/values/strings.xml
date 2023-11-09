@@ -7,4 +7,5 @@
     <string name="error_message">Oh! Something went wrong</string>
     <string name="minitue">m</string>
     <string name="seconds">s</string>
+    <string name="race_number">Race Number</string>
 </resources>

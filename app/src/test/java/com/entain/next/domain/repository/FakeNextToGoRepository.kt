@@ -74,7 +74,14 @@ class FakeNextToGoRepository : NextToGoRepository {
 
     override suspend fun deleteExpiredEvent(nextToGo: NextToGo?) {
         dbData.remove(nextToGo?.toNextToGo())
-        cleaUpAllExpiredEvent()
+    }
+
+    override suspend fun deleteExpiredEvents() {
+        val expiredData = dbData
+            .filter { (it.adStartTimeInSeconds - currentTimeToSeconds()) <= -SECONDS }
+        expiredData.forEach {
+            dbData.remove(it)
+        }
     }
 
     private fun hasExpiredRacing(racing: List<NextToGoEntity>): Boolean {
@@ -83,14 +90,6 @@ class FakeNextToGoRepository : NextToGoRepository {
             val remaining =
                 (it.adStartTimeInSeconds - currentTimeToSeconds())
             remaining < -SECONDS
-        }
-    }
-
-    private fun cleaUpAllExpiredEvent() {
-        val expiredData = dbData
-            .filter { (it.adStartTimeInSeconds - currentTimeToSeconds()) <= -SECONDS }
-        expiredData.forEach {
-            dbData.remove(it)
         }
     }
 }

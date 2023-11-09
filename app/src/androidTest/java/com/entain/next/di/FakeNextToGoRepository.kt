@@ -19,6 +19,11 @@ class FakeNextToGoDataSource @Inject constructor() {
     fun deleteExpiredEvent(nextToGo: NextToGo?) {
         val items = flow.value.data?.toMutableList()
         items?.remove(nextToGo)
+
+    }
+
+    fun deleteExpiredEvents() {
+        val items = flow.value.data?.toMutableList()
         items?.removeAll(items.filter { (it.adStartTimeInSeconds - currentTimeToSeconds()) <= -SECONDS })
         flow.tryEmit(Resource.Success(data = items))
     }
