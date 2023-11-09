@@ -24,7 +24,7 @@ class NextToGoRepositoryTest {
     fun `test the remote api is not called, if the local cached is not expired (after 1 min) then return local cache`() =
         runTest {
             fakeNextToGoRepository.emit(dbList = localData(), response = fetchSuccessData())
-            fakeNextToGoRepository.getNextToGoRacingSummery().test {
+            fakeNextToGoRepository.fetchNextToGoRacing().test {
                 val item1 = awaitItem()
                 val item2 = awaitItem()
                 val item3 = awaitItem()
@@ -40,7 +40,7 @@ class NextToGoRepositoryTest {
     fun `test the remote api called, if the local cached is expired (after 1 min) then remote api update the cache`() =
         runTest {
             fakeNextToGoRepository.emit(dbList = localDataExpired(), response = fetchSuccessData())
-            fakeNextToGoRepository.getNextToGoRacingSummery().test {
+            fakeNextToGoRepository.fetchNextToGoRacing().test {
                 val item1 = awaitItem()
                 val item2 = awaitItem()
                 val item3 = awaitItem()
@@ -48,7 +48,7 @@ class NextToGoRepositoryTest {
                 assertTrue(item2 is Resource.Success)
                 assertTrue(item3 is Resource.Loading)
                 assertEquals(1, item2.data?.count())
-                assertEquals("name", item2.data?.first()?.name)
+                assertEquals("name", item2.data?.first()?.meetingName)
                 awaitComplete()
             }
         }
@@ -57,7 +57,7 @@ class NextToGoRepositoryTest {
     fun `test the remote api called and receive error and if the local cached is expired (after 1 min) then error returning`() =
         runTest {
             fakeNextToGoRepository.emit(dbList = localDataExpired(), response = fetchErrorData())
-            fakeNextToGoRepository.getNextToGoRacingSummery().test {
+            fakeNextToGoRepository.fetchNextToGoRacing().test {
                 val item1 = awaitItem()
                 val item2 = awaitItem()
                 val item3 = awaitItem()
@@ -73,12 +73,12 @@ class NextToGoRepositoryTest {
         runTest {
             fakeNextToGoRepository.emit(localData(), fetchSuccessData())
             fakeNextToGoRepository.clearLocalCache()
-            fakeNextToGoRepository.getNextToGoRacingSummery().test {
+            fakeNextToGoRepository.fetchNextToGoRacing().test {
                 val item1 = awaitItem()
                 val item2 = awaitItem()
                 val item3 = awaitItem()
                 assertEquals(1, item2.data?.count())
-                assertEquals("name", item2.data?.first()?.name)
+                assertEquals("name", item2.data?.first()?.meetingName)
                 awaitComplete()
             }
         }
@@ -116,7 +116,7 @@ class NextToGoRepositoryTest {
             raceId = "test",
             adCategory = Categories.Harness,
             raceNumber = "1",
-            name = "tes",
+            meetingName = "tes",
             adStartTimeInSeconds = currentTimeToSeconds() - 65L
         )
     )
@@ -126,7 +126,7 @@ class NextToGoRepositoryTest {
             raceId = "test",
             adCategory = Categories.Harness,
             raceNumber = "1",
-            name = "tes",
+            meetingName = "tes",
             adStartTimeInSeconds = currentTimeToSeconds() + 65L
         )
     )

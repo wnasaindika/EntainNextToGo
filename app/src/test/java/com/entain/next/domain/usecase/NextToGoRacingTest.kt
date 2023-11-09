@@ -29,7 +29,7 @@ class NextToGoRacingTest {
 
     @Test
     fun `test max limit 5 racing events when user filter by all`() = runTest {
-        coEvery { fakeRepository.getNextToGoRacingSummery() } returns flowOf(
+        coEvery { fakeRepository.fetchNextToGoRacing() } returns flowOf(
             Resource.Success(
                 fakeData()
             )
@@ -37,16 +37,16 @@ class NextToGoRacingTest {
         nextToGoRacing.invoke(RaceOrder.ALL).test {
             val item1 = awaitItem()
             assertEquals(5, item1.data?.count())
-            assertEquals("grayhound 1", item1.data?.get(0)?.name)
-            assertEquals("horse 1", item1.data?.get(1)?.name)
-            assertEquals("harness 1", item1.data?.get(2)?.name)
+            assertEquals("grayhound 1", item1.data?.get(0)?.meetingName)
+            assertEquals("horse 1", item1.data?.get(1)?.meetingName)
+            assertEquals("harness 1", item1.data?.get(2)?.meetingName)
             awaitComplete()
         }
     }
 
     @Test
     fun `test harness racing events when user filter by harness`() = runTest {
-        coEvery { fakeRepository.getNextToGoRacingSummery() } returns flowOf(
+        coEvery { fakeRepository.fetchNextToGoRacing() } returns flowOf(
             Resource.Success(
                 fakeData()
             )
@@ -60,7 +60,7 @@ class NextToGoRacingTest {
 
     @Test
     fun `test horse racing events when user filter by horse`() = runTest {
-        coEvery { fakeRepository.getNextToGoRacingSummery() } returns flowOf(
+        coEvery { fakeRepository.fetchNextToGoRacing() } returns flowOf(
             Resource.Success(
                 fakeData()
             )
@@ -74,7 +74,7 @@ class NextToGoRacingTest {
 
     @Test
     fun `test gray hound racing events when user filter by gray hound`() = runTest {
-        coEvery { fakeRepository.getNextToGoRacingSummery() } returns flowOf(
+        coEvery { fakeRepository.fetchNextToGoRacing() } returns flowOf(
             Resource.Success(
                 fakeData()
             )
@@ -89,7 +89,7 @@ class NextToGoRacingTest {
     @Test
     fun `test gray hound and horse racing events when user filter by gray hound and horse`() =
         runTest {
-            coEvery { fakeRepository.getNextToGoRacingSummery() } returns flowOf(
+            coEvery { fakeRepository.fetchNextToGoRacing() } returns flowOf(
                 Resource.Success(
                     fakeData()
                 )
@@ -103,13 +103,13 @@ class NextToGoRacingTest {
 
     @Test
     fun `test cache cleared when refresh called`() = runTest {
-        coEvery { fakeRepository.getNextToGoRacingSummery() } returns flowOf(
+        coEvery { fakeRepository.fetchNextToGoRacing() } returns flowOf(
             Resource.Success(
                 fakeData()
             )
         )
         coEvery { fakeRepository.clearLocalCache() } returns Unit
-        nextToGoRacing.refresh(RaceOrder.Harness)
+        nextToGoRacing.refresh()
         coVerify(exactly = 1) {
             fakeRepository.clearLocalCache()
         }
@@ -117,7 +117,7 @@ class NextToGoRacingTest {
 
     @Test
     fun `test delete expired event when remove expired event from cache`() = runTest {
-        coEvery { fakeRepository.getNextToGoRacingSummery() } returns flowOf(
+        coEvery { fakeRepository.fetchNextToGoRacing() } returns flowOf(
             Resource.Success(
                 fakeData()
             )
@@ -135,42 +135,42 @@ class NextToGoRacingTest {
             raceId = "harness",
             adCategory = Categories.Harness,
             raceNumber = "1",
-            name = "harness 1",
+            meetingName = "harness 1",
             adStartTimeInSeconds = currentTimeToSeconds() + 65L
         ),
         NextToGo(
             raceId = "horse",
             adCategory = Categories.Horse,
             raceNumber = "1",
-            name = "horse 1",
+            meetingName = "horse 1",
             adStartTimeInSeconds = currentTimeToSeconds() + 60L
         ),
         NextToGo(
             raceId = "grayhound",
             adCategory = Categories.GrayHound,
             raceNumber = "1",
-            name = "grayhound 1",
+            meetingName = "grayhound 1",
             adStartTimeInSeconds = currentTimeToSeconds() + 55L
         ),
         NextToGo(
             raceId = "harness 2",
             adCategory = Categories.Harness,
             raceNumber = "2",
-            name = "tes 2",
+            meetingName = "tes 2",
             adStartTimeInSeconds = currentTimeToSeconds() + 165L
         ),
         NextToGo(
             raceId = "harness 3",
             adCategory = Categories.Harness,
             raceNumber = "1",
-            name = "tes",
+            meetingName = "tes",
             adStartTimeInSeconds = currentTimeToSeconds() + 265L
         ),
         NextToGo(
             raceId = "harness 3",
             adCategory = Categories.Harness,
             raceNumber = "1",
-            name = "tes",
+            meetingName = "tes",
             adStartTimeInSeconds = currentTimeToSeconds() + 365L
         )
     )

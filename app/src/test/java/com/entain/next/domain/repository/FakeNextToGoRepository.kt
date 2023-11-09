@@ -27,7 +27,7 @@ class FakeNextToGoRepository : NextToGoRepository {
         )
     )
 
-    override suspend fun getNextToGoRacingSummery(): Flow<Resource<List<NextToGo>>> {
+    override suspend fun fetchNextToGoRacing(): Flow<Resource<List<NextToGo>>> {
         return flow {
             emit(Resource.Loading(true))
             val localData = dbData

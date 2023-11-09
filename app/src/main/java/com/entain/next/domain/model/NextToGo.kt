@@ -2,7 +2,7 @@ package com.entain.next.domain.model
 
 data class NextToGo(
     val raceId: String,
-    val name: String,
+    val meetingName: String,
     val raceNumber: String,
     val adStartTimeInSeconds: Long,
     val adCategory: Categories

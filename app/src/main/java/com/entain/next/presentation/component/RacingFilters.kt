@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedFilterChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -29,7 +28,6 @@ import com.entain.next.presentation.data.RaceSelectState
 import com.entain.next.ui.EntainTheme
 import com.entain.next.util.ContentDescriptionUtil
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RacingFilters(raceSelectState: RaceSelectState, onRaceSelect: (RaceSelectState) -> Unit) {
 
@@ -44,82 +42,73 @@ fun RacingFilters(raceSelectState: RaceSelectState, onRaceSelect: (RaceSelectSta
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        ElevatedFilterChip(
-            selected = selectedStatus.horseSelected,
-            onClick = {
-                selectedStatus =
-                    selectedStatus.copy(horseSelected = !selectedStatus.horseSelected)
-                onRaceSelect.invoke(selectedStatus)
-            },
-            label = {
-                Text(
-                    text = stringResource(id = R.string.horse),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            },
-            leadingIcon = {
-                if (selectedStatus.horseSelected) {
-                    Icon(
-                        imageVector = Icons.Default.Check,
-                        contentDescription = ContentDescriptionUtil.HORSE_SELECT
-                    )
-                } else null
-            },
-            modifier = Modifier.semantics {
-                contentDescription = ContentDescriptionUtil.HORSE_BUTTON
-            }
-        )
-        ElevatedFilterChip(
-            selected = selectedStatus.grayHoundSelected,
-            onClick = {
-                selectedStatus =
-                    selectedStatus.copy(grayHoundSelected = !selectedStatus.grayHoundSelected)
-                onRaceSelect.invoke(selectedStatus)
-            },
-            label = {
-                Text(
-                    text = stringResource(id = R.string.gray_hound),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            },
-            leadingIcon = {
-                if (selectedStatus.grayHoundSelected) {
-                    Icon(
-                        imageVector = Icons.Default.Check,
-                        contentDescription = ContentDescriptionUtil.GRAY_HOUND_SELECT
-                    )
-                } else null
-            },
-            modifier = Modifier.semantics {
-                contentDescription = ContentDescriptionUtil.GRAY_HOUND_BUTTON
-            }
-        )
-        ElevatedFilterChip(
-            selected = selectedStatus.harnessSelected,
-            onClick = {
-                selectedStatus =
-                    selectedStatus.copy(harnessSelected = !selectedStatus.harnessSelected)
-                onRaceSelect.invoke(selectedStatus)
-            },
-            label = {
-                Text(
-                    text = stringResource(id = R.string.harness),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            },
-            leadingIcon = {
-                if (selectedStatus.harnessSelected) {
-                    Icon(
-                        imageVector = Icons.Default.Check,
-                        contentDescription = ContentDescriptionUtil.HARNESS_SELECT
-                    )
-                } else null
-            },
-            modifier = Modifier.semantics {
-                contentDescription = ContentDescriptionUtil.HARNESS_BUTTON
-            }
-        )
+        RacingFilterItem(
+            selectedStatus = selectedStatus.horseSelected,
+            raceType = stringResource(id = R.string.horse),
+            iconContentDescription = ContentDescriptionUtil.HORSE_SELECT,
+            containerContentDescription = ContentDescriptionUtil.HORSE_BUTTON
+        ) {
+            selectedStatus =
+                selectedStatus.copy(horseSelected = it)
+            onRaceSelect.invoke(selectedStatus)
+        }
+
+        RacingFilterItem(
+            selectedStatus = selectedStatus.grayHoundSelected,
+            raceType = stringResource(id = R.string.gray_hound),
+            iconContentDescription = ContentDescriptionUtil.GRAY_HOUND_SELECT,
+            containerContentDescription = ContentDescriptionUtil.GRAY_HOUND_BUTTON
+        ) {
+            selectedStatus =
+                selectedStatus.copy(grayHoundSelected = it)
+            onRaceSelect.invoke(selectedStatus)
+        }
+
+        RacingFilterItem(
+            selectedStatus = selectedStatus.harnessSelected,
+            raceType = stringResource(id = R.string.harness),
+            iconContentDescription = ContentDescriptionUtil.HARNESS_SELECT,
+            containerContentDescription = ContentDescriptionUtil.HARNESS_BUTTON
+        ) {
+            selectedStatus =
+                selectedStatus.copy(harnessSelected = it)
+            onRaceSelect.invoke(selectedStatus)
+        }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RacingFilterItem(
+    selectedStatus: Boolean,
+    raceType: String,
+    containerContentDescription: String,
+    iconContentDescription: String,
+    onRaceSelect: (Boolean) -> Unit
+) {
+    ElevatedFilterChip(
+        selected = selectedStatus,
+        onClick = {
+            onRaceSelect.invoke(!selectedStatus)
+        },
+        label = {
+            Text(
+                text = raceType,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        },
+        leadingIcon = {
+            if (selectedStatus) {
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = iconContentDescription
+                )
+            }
+        },
+        modifier = Modifier.semantics {
+            contentDescription = containerContentDescription
+        }
+    )
 }
 
 @Preview(showBackground = false)

@@ -7,7 +7,7 @@ import com.entain.next.domain.model.Categories
 @Entity
 data class NextToGoEntity(
     val raceId:String,
-    val name: String,
+    val meetingName: String,
     val raceNumber: String,
     val adStartTimeInSeconds: Long,
     val adCategory: Categories,

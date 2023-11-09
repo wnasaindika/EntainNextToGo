@@ -15,5 +15,7 @@ interface EntainApi {
 
     companion object{
         const val URL = "https://api.neds.com.au/"
+        const val REQUEST_METHOD = "nextraces"
+        const val NUMBER_OF_RACES = 500
     }
 }

@@ -14,14 +14,11 @@ class NextToGoRacing @Inject constructor(private val nextToGoRepository: NextToG
 
     suspend operator fun invoke(raceOrder: RaceOrder): Flow<Resource<List<NextToGo>>> {
 
-        return nextToGoRepository.getNextToGoRacingSummery().map {
+        return nextToGoRepository.fetchNextToGoRacing().map {
 
             val sortedList = it.data?.sortedBy { it.adStartTimeInSeconds } ?: listOf()
             when (it) {
-                is Resource.Success -> {
-                    Resource.Success(getSortedList(raceOrder, sortedList))
-                }
-
+                is Resource.Success -> Resource.Success(getSortedList(raceOrder, sortedList))
                 else -> it
             }
         }

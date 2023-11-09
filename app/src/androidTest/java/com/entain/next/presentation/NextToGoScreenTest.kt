@@ -167,42 +167,42 @@ class NextToGoScreenTest {
             raceId = "1",
             adCategory = Categories.Harness,
             raceNumber = "1",
-            name = "harness 1",
+            meetingName = "harness 1",
             adStartTimeInSeconds = currentTimeToSeconds() + 65L
         ),
         NextToGo(
             raceId = "2",
             adCategory = Categories.Horse,
             raceNumber = "1",
-            name = "horse 1",
+            meetingName = "horse 1",
             adStartTimeInSeconds = currentTimeToSeconds() + 60L
         ),
         NextToGo(
             raceId = "3",
             adCategory = Categories.GrayHound,
             raceNumber = "1",
-            name = "grayhound 1",
+            meetingName = "grayhound 1",
             adStartTimeInSeconds = currentTimeToSeconds() + 55L
         ),
         NextToGo(
             raceId = "4",
             adCategory = Categories.Harness,
             raceNumber = "2",
-            name = "tes 2",
+            meetingName = "tes 2",
             adStartTimeInSeconds = currentTimeToSeconds() + 165L
         ),
         NextToGo(
             raceId = "5",
             adCategory = Categories.Harness,
             raceNumber = "1",
-            name = "tes",
+            meetingName = "tes",
             adStartTimeInSeconds = currentTimeToSeconds() + 265L
         ),
         NextToGo(
             raceId = "6",
             adCategory = Categories.Harness,
             raceNumber = "1",
-            name = "tes",
+            meetingName = "tes",
             adStartTimeInSeconds = currentTimeToSeconds() + 365L
         )
     )

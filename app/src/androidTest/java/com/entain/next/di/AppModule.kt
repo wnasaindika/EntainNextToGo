@@ -23,7 +23,7 @@ class TestAppModule {
     @Singleton
     fun provideNextToGoRepository(fakeNextToGoDataSource: FakeNextToGoDataSource): NextToGoRepository =
         object : NextToGoRepository {
-            override suspend fun getNextToGoRacingSummery(): Flow<Resource<List<NextToGo>>> {
+            override suspend fun fetchNextToGoRacing(): Flow<Resource<List<NextToGo>>> {
                 return fakeNextToGoDataSource.getFakeData()
             }
 

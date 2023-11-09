@@ -12,7 +12,7 @@ import com.entain.next.domain.model.NextToGo
 fun RaceSummaryDto.toNextToGoEntity(): NextToGoEntity {
     return NextToGoEntity(
         raceId = this.race_id,
-        name = this.meeting_name,
+        meetingName = this.meeting_name,
         raceNumber = this.race_number,
         adCategory = when (this.category_id) {
             grayHound -> Categories.GrayHound
@@ -27,7 +27,7 @@ fun RaceSummaryDto.toNextToGoEntity(): NextToGoEntity {
 fun NextToGoEntity.toNextToGo(): NextToGo {
     return NextToGo(
         raceId = this.raceId,
-        name = this.name,
+        meetingName = this.meetingName,
         raceNumber = this.raceNumber,
         adCategory = this.adCategory,
         adStartTimeInSeconds = this.adStartTimeInSeconds
@@ -37,7 +37,7 @@ fun NextToGoEntity.toNextToGo(): NextToGo {
 fun NextToGo.toNextToGo(): NextToGoEntity {
     return NextToGoEntity(
         raceId = this.raceId,
-        name = this.name,
+        meetingName = this.meetingName,
         raceNumber = this.raceNumber,
         adCategory = this.adCategory,
         adStartTimeInSeconds = this.adStartTimeInSeconds
