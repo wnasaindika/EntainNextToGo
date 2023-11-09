@@ -10,4 +10,6 @@ object ContentDescriptionUtil {
     const val GRAY_HOUND_BUTTON = "Gray Hound Button"
     const val HORSE_BUTTON = "Horse Button"
     const val EVENT_ITEM = "Event Item"
+    const val MINUTE = "Minute"
+    const val SECONDS = "Seconds"
 }

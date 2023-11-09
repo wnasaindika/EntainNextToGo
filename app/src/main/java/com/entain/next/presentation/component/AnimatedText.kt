@@ -13,11 +13,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.entain.next.R
 import com.entain.next.util.ANIMATED_COUNTER_LIMIT_IN_SECOND
+import com.entain.next.util.ContentDescriptionUtil
 import com.entain.next.util.MIN_IN_SECOND
 import com.entain.next.util.SECONDS
 import com.entain.next.util.TimeEvent
@@ -52,7 +56,9 @@ fun AnimatedText(time: Long, onExpired: () -> Unit) {
                 alignment = Alignment.CenterHorizontally
             )
         ) {
-            Row {
+            Row(modifier = Modifier.semantics {
+                contentDescription = ContentDescriptionUtil.MINUTE
+            }) {
                 Text(text = "$mins", style = MaterialTheme.typography.titleMedium)
                 Text(
                     text = stringResource(R.string.minitue),
@@ -60,7 +66,9 @@ fun AnimatedText(time: Long, onExpired: () -> Unit) {
                 )
             }
 
-            Row {
+            Row(modifier = Modifier.semantics {
+                contentDescription = ContentDescriptionUtil.SECONDS
+            }) {
                 Text(text = "$seconds", style = MaterialTheme.typography.titleMedium)
                 Text(
                     text = stringResource(R.string.seconds),
@@ -112,6 +120,6 @@ fun ShowAnimatedText() {
 @Preview(showBackground = false)
 @Composable
 fun TestTimerEvent() {
-    TimerEvent(time = 60L, onExpired = {  }) { _, _ ->
+    TimerEvent(time = 60L, onExpired = { }) { _, _ ->
     }
 }

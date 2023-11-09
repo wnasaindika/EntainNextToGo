@@ -104,21 +104,6 @@ class NextToGoRacingTest {
         }
 
     @Test
-    fun `test returning a empty racing events when any event has the size of less than five racing events`() =
-        runTest {
-            coEvery { fakeRepository.fetchNextToGoRacing() } returns flowOf(
-                Resource.Success(
-                    fakeData(true)
-                )
-            )
-            nextToGoRacing.invoke(RaceOrder.HorseAndGrayHound).test {
-                val item1 = awaitItem()
-                assertEquals(0, item1.data?.count())
-                awaitComplete()
-            }
-        }
-
-    @Test
     fun `test cache cleared when refresh called`() = runTest {
         coEvery { fakeRepository.fetchNextToGoRacing() } returns flowOf(
             Resource.Success(

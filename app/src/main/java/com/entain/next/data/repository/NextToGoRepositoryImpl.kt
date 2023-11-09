@@ -31,7 +31,7 @@ class NextToGoRepositoryImpl @Inject constructor(
             val localData = localDb.getNextToGo()
 
             val shouldJustLoadFromCache =
-                localData.isNotEmpty() && !hasExpiredRacing(localData)
+                localData.isNotEmpty() && !hasExpiredRacing(localData) && localData.count() > 5
 
             if (shouldJustLoadFromCache) {
                 emit(Resource.Loading(false))
@@ -49,7 +49,8 @@ class NextToGoRepositoryImpl @Inject constructor(
 
             val responseResult = clearCacheAndExtractRemoteData(remoteData)
 
-            if (responseResult.isNullOrEmpty()) {
+            if (responseResult.isNullOrEmpty() || responseResult.count() < 5) {
+                emit(Resource.Loading(false))
                 emit(Resource.Error("Can not load racing data"))
                 return@flow
             }

@@ -21,7 +21,7 @@ class NextToGoRepositoryTest {
     private val fakeNextToGoRepository = FakeNextToGoRepository()
 
     @Test
-    fun `test the remote api is not called, if the local cached is not expired (after 1 min) then return local cache`() =
+    fun `test local cache is only work when events are not empty or not less than 5 or no expired items`() =
         runTest {
             fakeNextToGoRepository.emit(dbList = localData(), response = fetchSuccessData())
             fakeNextToGoRepository.fetchNextToGoRacing().test {
@@ -31,13 +31,13 @@ class NextToGoRepositoryTest {
                 assertTrue(item1 is Resource.Loading)
                 assertTrue(item2 is Resource.Success)
                 assertTrue(item3 is Resource.Loading)
-                assertEquals(1, item2.data?.count())
+                assertEquals(7, item2.data?.count())
                 awaitComplete()
             }
         }
 
     @Test
-    fun `test the remote api called, if the local cached is expired (after 1 min) then remote api update the cache`() =
+    fun `test invalidate expired race event and consume data from remote api`() =
         runTest {
             fakeNextToGoRepository.emit(dbList = localDataExpired(), response = fetchSuccessData())
             fakeNextToGoRepository.fetchNextToGoRacing().test {
@@ -47,14 +47,14 @@ class NextToGoRepositoryTest {
                 assertTrue(item1 is Resource.Loading)
                 assertTrue(item2 is Resource.Success)
                 assertTrue(item3 is Resource.Loading)
-                assertEquals(1, item2.data?.count())
-                assertEquals("name", item2.data?.first()?.meetingName)
+                assertEquals(7, item2.data?.count())
+                assertEquals("name 0", item2.data?.first()?.meetingName)
                 awaitComplete()
             }
         }
 
     @Test
-    fun `test the remote api called and receive error and if the local cached is expired (after 1 min) then error returning`() =
+    fun `test the remote api error, if the local cached is expired (after 1 min) then error returning`() =
         runTest {
             fakeNextToGoRepository.emit(dbList = localDataExpired(), response = fetchErrorData())
             fakeNextToGoRepository.fetchNextToGoRacing().test {
@@ -62,14 +62,14 @@ class NextToGoRepositoryTest {
                 val item2 = awaitItem()
                 val item3 = awaitItem()
                 assertTrue(item1 is Resource.Loading)
-                assertTrue(item2 is Resource.Error)
-                assertTrue(item3 is Resource.Loading)
+                assertTrue(item2 is Resource.Loading)
+                assertTrue(item3 is Resource.Error)
                 awaitComplete()
             }
         }
 
     @Test
-    fun `test local cached clear and then call remote api is then new item added to the local cached`() =
+    fun `test when clearLocalCache clean up race event and then fetch remote data and new items are added to the local cached`() =
         runTest {
             fakeNextToGoRepository.emit(localData(), fetchSuccessData())
             fakeNextToGoRepository.clearLocalCache()
@@ -77,8 +77,8 @@ class NextToGoRepositoryTest {
                 val item1 = awaitItem()
                 val item2 = awaitItem()
                 val item3 = awaitItem()
-                assertEquals(1, item2.data?.count())
-                assertEquals("name", item2.data?.first()?.meetingName)
+                assertEquals(7, item2.data?.count())
+                assertEquals("name 0", item2.data?.first()?.meetingName)
                 awaitComplete()
             }
         }
@@ -91,25 +91,29 @@ class NextToGoRepositoryTest {
         )
     )
 
-    private fun fetchSuccessData() = Response.success(
-        ResponseDto(
-            data = NextToGoDto(
-                next_to_go_ids = listOf("1"), race_summaries = mapOf(
-                    Pair(
-                        "1", RaceSummaryDto(
-                            race_id = "1",
-                            race_number = "1",
-                            advertised_start = AdvertisedStartDto(currentTimeToSeconds() + 3L),
-                            category_id = "harness",
-                            meeting_name = "name"
-                        )
-                    )
-                )
-            ),
-            message = "test",
-            status = 200
+    private fun fetchSuccessData(): Response<ResponseDto> {
+        val ids = (0..6).map { "$it" }
+        val raceSummery = (0..6).withIndex().mapIndexed { index, indexedValue ->
+            index.toString() to RaceSummaryDto(
+                race_id = "$index",
+                race_number = "$index",
+                advertised_start = AdvertisedStartDto(currentTimeToSeconds() + 3L + index),
+                category_id = "harness",
+                meeting_name = "name $index"
+            )
+        }.toMap()
+
+        return Response.success(
+            ResponseDto(
+                data = NextToGoDto(
+                    next_to_go_ids = ids,
+                    race_summaries = raceSummery
+                ),
+                message = "test",
+                status = 200
+            )
         )
-    )
+    }
 
     private fun localDataExpired() = listOf(
         NextToGoEntity(

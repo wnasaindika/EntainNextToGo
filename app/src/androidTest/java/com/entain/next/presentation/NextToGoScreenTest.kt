@@ -117,7 +117,7 @@ class NextToGoScreenTest {
     }
 
     @Test
-    fun verify_filter_chips_visibility_and_selected_when_app_start() {
+    fun verify_filter_chips_visibility_and_all_selected_when_app_start() {
         composeRule.onNodeWithContentDescription(ContentDescriptionUtil.HORSE_BUTTON)
             .assertIsDisplayed()
         composeRule.onNodeWithContentDescription(ContentDescriptionUtil.HORSE_SELECT)
@@ -134,7 +134,7 @@ class NextToGoScreenTest {
 
 
     @Test
-    fun verify_event_items_limited_to_five() = runTest {
+    fun verify_event_items_are_limited_to_max_five() = runTest {
         fakeNextToGoDataSource.emit(Resource.Success(fakeData()))
         composeRule.onNodeWithContentDescription("${ContentDescriptionUtil.EVENT_ITEM} ${fakeData()[2].raceId}")
             .assertIsDisplayed()
