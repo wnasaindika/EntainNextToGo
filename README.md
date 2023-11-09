@@ -42,7 +42,7 @@
  - 2 - 3 hrs for bug fixing/optimization and doucmentation 
 
 ## The weakest part of your project
- - minimum size for any race is 5, if the remote api return less then 5 items apps will throw an error (this avoid race condition if the server return less than 5 element for any count)
+ - minimum size for any race is 5, if the remote api return less then 5 items apps will throw an error (potential race condition if the server always return less than 5 element for any request)
  
 ## dependencies list
 
