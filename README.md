@@ -1,41 +1,41 @@
 ## Build tools & versions used
   ### The app required following libraries to build the project 
 
-     -  Kotlin version 1.9.10
-     -  Gradle version 8.0
-     -  Hilt version 2.48
-     -  Jetpack Compose  version 1.5.3
-     -  Kotlin Coroutine 
-     -  Retrofit version 2.9.0
-     -  Coil for image cahcing 
-     -  Terbine for flow testing 
-     -  Matirial 3 for UI design
+ -  Kotlin version 1.9.10
+ -  Gradle version 8.0
+ -  Hilt version 2.48
+ -  Jetpack Compose  version 1.5.3
+ -  Kotlin Coroutine 
+ -  Retrofit version 2.9.0
+ -  Coil for image cahcing 
+ -  Terbine for flow testing 
+ -  Matirial 3 for UI design
 
 ## Steps to run the app
 
-     - Git pull or download source code
-     - Sync All libaries 
-     - Press Run (select real device/emulator)
+ - Git pull or download source code
+ - Sync All libaries 
+ - Press Run (select real device/emulator)
 
 ## What areas of the app did you focus on?
   ### design for requirements  
   ### areas of focus
-  - clean architecture 
-  - app theming 
-  - MVVM architecture
-  - reduce network request with caching
-  - SOLID principle 
-  - scalability 
-  - maintainability 
+- clean architecture 
+- app theming 
+- MVVM architecture
+- reduce network request with caching
+- SOLID principle 
+- scalability
+- maintainability 
 
 ### problems trying to solve
 
-   - fetching data from network with retrofit and providing single data source 
-   - timer on the racing list
-   - limit network request when race event expired 
-   - list refreshed   
-   - limit race event with filters 
-   - full fill the given requirements 
+- fetching data from network with retrofit and providing single data source 
+- timer on the racing list
+- limit network request when race event expired 
+- list refreshed   
+- limit race event with filters 
+- full fill the given requirements 
 
 ## How long did you spend on this project?
  - 5 - 6 hrs finshing the task (UI and Architecture) 
