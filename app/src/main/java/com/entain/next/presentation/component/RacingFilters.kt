@@ -54,7 +54,7 @@ fun RacingFilters(raceSelectState: RaceSelectState, onRaceSelect: (RaceSelectSta
             label = {
                 Text(
                     text = stringResource(id = R.string.horse),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.bodyMedium
                 )
             },
             leadingIcon = {
@@ -79,7 +79,7 @@ fun RacingFilters(raceSelectState: RaceSelectState, onRaceSelect: (RaceSelectSta
             label = {
                 Text(
                     text = stringResource(id = R.string.gray_hound),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.bodyMedium
                 )
             },
             leadingIcon = {
@@ -104,7 +104,7 @@ fun RacingFilters(raceSelectState: RaceSelectState, onRaceSelect: (RaceSelectSta
             label = {
                 Text(
                     text = stringResource(id = R.string.harness),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.bodyMedium
                 )
             },
             leadingIcon = {

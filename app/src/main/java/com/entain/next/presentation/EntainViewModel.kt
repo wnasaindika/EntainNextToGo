@@ -45,7 +45,8 @@ class EntainViewModel @Inject constructor(private val nextToGoRacing: NextToGoRa
             nextToGoRacing.checkAndRemoveExpiredEvents()
             when (event) {
                 is RaceEvent.Refresh -> {
-                    nextToGoRacing.refresh(RaceOrder.ALL)
+                    nextToGoRacing.refresh()
+                    fetchRacingData(RaceOrder.ALL)
                 }
 
                 is RaceEvent.SelectRace -> {

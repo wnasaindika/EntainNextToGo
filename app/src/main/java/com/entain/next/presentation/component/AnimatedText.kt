@@ -1,7 +1,6 @@
 package com.entain.next.presentation.component
 
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.MaterialTheme
@@ -21,9 +20,11 @@ import com.entain.next.R
 import com.entain.next.util.ANIMATED_COUNTER_LIMIT_IN_SECOND
 import com.entain.next.util.MIN_IN_SECOND
 import com.entain.next.util.SECONDS
-import com.entain.next.util.SECOND_IN_MILL_SECOND
+import com.entain.next.util.TimeEvent
+import com.entain.next.util.TimeHandler
 import com.entain.next.util.formatToDate
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 
 
 @Composable
@@ -77,28 +78,28 @@ fun AnimatedText(time: Long, onExpired: () -> Unit) {
 
 @Composable
 fun TimerEvent(time: Long, onExpired: () -> Unit, onProgress: (Long, Long) -> Unit) {
-
-    var timeLeftInSecond by remember {
-        mutableLongStateOf(time)
-    }
-
+    val handler = TimeHandler(time)
     val updateOnExpire by rememberUpdatedState(newValue = onExpired)
     val updateOnProgress by rememberUpdatedState(newValue = onProgress)
-    LaunchedEffect(key1 = timeLeftInSecond) {
-        while (timeLeftInSecond > -SECONDS) {
-            delay(SECOND_IN_MILL_SECOND)
-            timeLeftInSecond--
-            updateOnProgress(
-                (timeLeftInSecond % MIN_IN_SECOND) / SECONDS,
-                timeLeftInSecond % SECONDS
-            )
-        }
-        if (timeLeftInSecond == -SECONDS) {
-            updateOnExpire()
-        }
+    LaunchedEffect(key1 = handler) {
 
+        handler.handleTime().onEach {
+            when (it) {
+                is TimeEvent.Progress -> {
+                    updateOnProgress(
+                        it.m,
+                        it.s
+                    )
+                }
+
+                is TimeEvent.Expired -> {
+                    updateOnExpire()
+                }
+            }
+        }.collect()
     }
 }
+
 
 @Preview(showBackground = false)
 @Composable
@@ -111,7 +112,6 @@ fun ShowAnimatedText() {
 @Preview(showBackground = false)
 @Composable
 fun TestTimerEvent() {
-    TimerEvent(time = 400L, onExpired = { /*TODO*/ }) { min, sec ->
-        Log.e("logs", "$min $sec")
+    TimerEvent(time = 60L, onExpired = {  }) { _, _ ->
     }
 }

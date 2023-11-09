@@ -17,7 +17,7 @@ fun RaceSummaryDto.toNextToGoEntity(): NextToGoEntity {
         adCategory = when (this.category_id) {
             grayHound -> Categories.GrayHound
             horse -> Categories.Horse
-            harness -> Categories.GrayHound
+            harness -> Categories.Harness
             else -> Categories.None
         },
         adStartTimeInSeconds = this.advertised_start.seconds

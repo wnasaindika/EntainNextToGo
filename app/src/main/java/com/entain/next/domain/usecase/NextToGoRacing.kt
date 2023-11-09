@@ -57,9 +57,8 @@ class NextToGoRacing @Inject constructor(private val nextToGoRepository: NextToG
         }
     }
 
-    suspend fun refresh(order: RaceOrder) {
+    suspend fun refresh() {
         nextToGoRepository.clearLocalCache()
-        invoke(order)
     }
 
     suspend fun removeExpiredEventFromCache(nextToGo: NextToGo?) {
