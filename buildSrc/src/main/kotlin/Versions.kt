@@ -1,11 +1,22 @@
 object Versions {
 
-    const val compose = ""
-    const val composeMaterial = ""
+    const val composeBomb = "2023.09.02"
+    const val composeMaterial = "1.6.0-alpha08"
     const val retrofit = "2.9.0"
     const val hilt = "2.48"
+    const val hiltNavigation = "1.1.0"
     const val okhttp = "5.0.0-alpha.3"
     const val moshi = "1.14.0"
     const val room = "2.6.0"
-
+    const val turbine = "1.0.0"
+    const val mockk = "1.13.8"
+    const val coil = "2.5.0"
+    const val googleMaterial = "1.10.0"
+    const val coroutineTest = "1.7.3"
+    const val jUnit = "4.13.2"
+    const val jUnitExt = "1.1.5"
+    const val viewModelCompose = "2.6.2"
+    const val ktx ="1.12.0"
+    const val appCompact ="1.6.1"
+    const val expresso ="3.5.1"
 }

@@ -1,5 +1,6 @@
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.dsl.DependencyHandler
+import org.gradle.kotlin.dsl.get
 
 fun DependencyHandler.implementation(dependency: String) {
     add("implementation", dependency)
@@ -13,6 +14,10 @@ fun DependencyHandler.test(dependency: String) {
     add("test", dependency)
 }
 
+fun DependencyHandler.testImplementation(dependency: String) {
+    add("testImplementation", dependency)
+}
+
 fun DependencyHandler.androidTest(dependency: String) {
     add("androidTest", dependency)
 }
@@ -22,6 +27,10 @@ fun DependencyHandler.annotationProcessor(dependency: String) {
 }
 
 fun DependencyHandler.androidTestImplementation(dependency: String) {
+    add("androidTestImplementation", dependency)
+}
+
+fun DependencyHandler.androidTestImplementation(dependency: Dependency) {
     add("androidTestImplementation", dependency)
 }
 
@@ -53,6 +62,7 @@ fun DependencyHandler.retrofit() {
 fun DependencyHandler.okhttp() {
     implementation(Dependencies.okhttp)
     implementation(Dependencies.okHttpLoggingInterceptor)
+    testImplementation(Dependencies.okhttpMockServer)
 }
 
 fun DependencyHandler.moshi() {
@@ -64,4 +74,61 @@ fun DependencyHandler.hilt() {
     kapt(Dependencies.hiltAndroidCompiler)
     androidTestImplementation(Dependencies.hiltAndroidTesting)
     kaptAndroidTest(Dependencies.hiltAndroidCompiler)
+    implementation(Dependencies.hiltNavigation)
+}
+
+fun DependencyHandler.compose() {
+    val composeBom = platform(Dependencies.composeBomb)
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
+    implementation(Dependencies.composeUi)
+    implementation(Dependencies.composeMatirial3)
+    implementation(Dependencies.composeMatirial)
+    implementation(Dependencies.googleMatirial)
+    implementation(Dependencies.composeToolingPreview)
+    debugImplementation(Dependencies.composeUiTooling)
+    debugImplementation(Dependencies.composeUiTestManifest)
+    androidTestImplementation(Dependencies.composeUiTest)
+}
+
+fun DependencyHandler.mockk() {
+    testImplementation(Dependencies.mockk)
+    testImplementation(Dependencies.mockkAndroidTest)
+}
+
+fun DependencyHandler.turbine() {
+    testImplementation(Dependencies.turbine)
+}
+
+fun DependencyHandler.coil() {
+    implementation(Dependencies.coil)
+}
+
+fun DependencyHandler.coroutinesTest() {
+    testImplementation(Dependencies.coroutinesTest)
+}
+
+fun DependencyHandler.jUnit() {
+    testImplementation(Dependencies.jUnit)
+    androidTestImplementation(Dependencies.androidJunitExt)
+}
+
+fun DependencyHandler.expresso() {
+    androidTestImplementation(Dependencies.coreExpresso)
+}
+
+fun DependencyHandler.ktx() {
+    implementation(Dependencies.kotlinExt)
+}
+
+fun DependencyHandler.viewModelCompose() {
+    implementation(Dependencies.viewModelCompose)
+}
+
+fun DependencyHandler.appCompact() {
+    implementation(Dependencies.appCompact)
+}
+
+fun DependencyHandler.getAndroid() {
+    this.extensions.getByName("android")
 }

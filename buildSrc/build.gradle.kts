@@ -11,5 +11,5 @@ repositories {
 
 val compileKotlin: KotlinCompile by tasks
 compileKotlin.kotlinOptions {
-    jvmTarget = "17"
+    jvmTarget = JavaVersion.VERSION_17.toString()
 }
