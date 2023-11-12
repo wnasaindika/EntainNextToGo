@@ -5,7 +5,11 @@
 
 
 ### final app (video)
-https://github.com/wnasaindika/EntainNextToGo/assets/1547028/d4f6789b-1c46-4435-bbbc-644309afb13c
+
+
+https://github.com/wnasaindika/EntainNextToGo/assets/1547028/e79a081d-e061-487a-a2b4-05f57e4d567a
+
+
 
 ## Build tools & versions used
 
