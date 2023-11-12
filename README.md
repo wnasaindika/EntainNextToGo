@@ -1,4 +1,4 @@
-## Next To Go Race using Jetpack compose + Clean Architecture + MVVM
+## Next To Go Racing + Jetpack Compose + Clean Architecture + MVVM
 
 ### initial design
 ![initial_design](https://github.com/wnasaindika/EntainNextToGo/assets/1547028/8f6b6ba9-3d2e-41ff-9346-9fb25d023d4b)
