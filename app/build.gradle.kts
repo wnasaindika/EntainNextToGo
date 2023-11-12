@@ -1,8 +1,9 @@
 plugins {
     id("com.android.application")
+    id("kotlin-android")
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
-
-apply<MainPlugin>()
 
 android {
     namespace = "com.entain.next"
