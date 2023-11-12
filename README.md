@@ -3,7 +3,7 @@
 ### initial design
 ![initial_design](https://github.com/wnasaindika/EntainNextToGo/assets/1547028/517aab3b-dd69-4585-ac5c-b3824b2c90d4)
 
-### final app
+### final app (video)
 https://github.com/wnasaindika/EntainNextToGo/assets/1547028/d4f6789b-1c46-4435-bbbc-644309afb13c
 
 ## Build tools & versions used
@@ -51,11 +51,11 @@ If the application requires modularization, use central points to govern the dep
 ## What areas of the app did you focus on?
 
 ### areas of focus
-
 - clean architecture
 - app theming
 - MVVM architecture
-- reduce network request with caching
+- central repository (Obtain data from the network and cache it; the cache will be updated based on user events
+  or if all races have expired if the race count is less than 5.)
 - SOLID principle
 - scalability
 - maintainability
