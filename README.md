@@ -86,6 +86,7 @@ If the application requires modularization, use central points to govern the dep
 - user not allowed to refresh if app status is error
 - If the minimum number of races is five and the race begins in a few days, the user must pull to
   refresh the app.
+- User must select all filter to show all races (Just a modification requirement #4 )
 
 ## Running test
 
