@@ -8,6 +8,7 @@ import com.entain.next.domain.repository.NextToGoRepository
 import com.entain.next.domain.util.Resource
 import com.entain.next.presentation.data.RaceOrder
 import com.entain.next.util.MAX_ITEMS_IN_LIST
+import com.entain.next.util.MIN_RACES_FOR_REFRESH
 import com.entain.next.util.SECONDS
 import com.entain.next.util.currentTimeToSeconds
 import kotlinx.coroutines.flow.Flow
@@ -37,7 +38,7 @@ class NextToGoRacing @Inject constructor(private val nextToGoRepository: NextToG
 
             val responseResult = nextToGoRepository.clearCacheAndExtractRemoteData(remoteData)
 
-            if (responseResult.isNullOrEmpty() || responseResult.count() < 5) {
+            if (responseResult.isNullOrEmpty() || responseResult.count() < MIN_RACES_FOR_REFRESH) {
                 emit(Resource.Loading(false))
                 emit(Resource.Error("Can not load racing data"))
                 return@flow
@@ -103,5 +104,5 @@ class NextToGoRacing @Inject constructor(private val nextToGoRepository: NextToG
         racing.all { (it.adStartTimeInSeconds - currentTimeToSeconds()) < -SECONDS }
 
     private fun shouldLoadFromCache(localData: List<LocalRaceSummery>) =
-        localData.isNotEmpty() && !hasExpiredRacing(localData) && localData.count() > 5
+        localData.isNotEmpty() && !hasExpiredRacing(localData) && localData.count() > MIN_RACES_FOR_REFRESH
 }
