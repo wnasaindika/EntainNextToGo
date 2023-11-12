@@ -1,53 +1,86 @@
-## Build tools & versions used
-  ### The app required following libraries to build the project 
+## Next To Go Race using Jetpack compose + Clean Architecture + MVVM
 
- -  Kotlin version 1.9.10
- -  Gradle version 8.0
- -  Hilt version 2.48
- -  Jetpack Compose  version 1.5.3
- -  Kotlin Coroutine 
- -  Retrofit version 2.9.0
- -  Coil for image cahcing 
- -  Terbine for flow testing 
- -  Matirial 3 for UI design
+
+## Build tools & versions used
+
+### The app required following libraries to build the project
+
+- Kotlin version 1.9.10
+- Gradle version 8.0
+- Hilt version 2.48
+- Jetpack Compose version 1.5.3
+- Kotlin Coroutine
+- Retrofit version 2.9.0
+- Coil for image caching
+- Turbine for flow testing
+- Material 3 for UI design
+
+### buildSrc
+
+If the application requires modularization, use central points to govern the dependencies.
+
+```
+    compose()
+    retrofit()
+    okhttp()
+    moshi()
+    hilt()
+    room()
+    turbine()
+    mockk()
+    coil()
+    coroutinesTest()
+    jUnit()
+    ktx()
+    appCompact()
+    viewModelCompose()
+    expresso()
+```
 
 ## Steps to run the app
 
- - Git pull or download source code
- - Sync All libaries 
- - Press Run (select real device/emulator)
+- Git pull or download source code
+- Sync All libaries
+- Press Run (select real device/emulator)
 
 ## What areas of the app did you focus on?
-  ### design for requirements  
-  ### areas of focus
-- clean architecture 
-- app theming 
+
+### areas of focus
+
+- clean architecture
+- app theming
 - MVVM architecture
 - reduce network request with caching
-- SOLID principle 
+- SOLID principle
 - scalability
-- maintainability 
+- maintainability
 
 ### problems trying to solve
 
-- fetching data from network with retrofit and providing single data source 
+- fetching data from network with retrofit and providing single data source
 - timer on the racing list
-- limit network request when race event expired 
-- list refreshed   
-- limit race event with filters 
-- full fill the given requirements 
+- limit network request when race event expired
+- list refreshed
+- limit race event with filters
+- full fill the given requirements
 
 ## How long did you spend on this project?
- - 5 - 6 hrs finshing the task (UI and Architecture) 
- - 2 - 3 hrs for bug fixing/optimization and doucmentation 
+
+- 5 - 6 hrs finishing the task (UI and Architecture)
+- 2 - 3 hrs for bug fixing/optimization and documentation
 
 ## The weakest part of your project
- - minimum size for any race is 5, if the remote api return less then 5 items apps will throw an error (potential race condition if the server always return less than 5 element for any request)
- 
+
+- minimum size for any race is 5, if the remote api return less then 5 items apps will throw an
+  error (potential race condition if the server always return less than 5 element for any request)
+- user not allowed to refresh if app status is error
+- If the minimum number of races is five and the race begins in a few days, the user must pull to
+  refresh the app.
+
 ## dependencies list
 
- - Matirial 3 Design with Jetpack Compse
- - Android dependencies and project listed below 
+- Matirial 3 Design with Jetpack Compse
+- Android dependencies and project listed below
 
 ```
     val composeBom = platform("androidx.compose:compose-bom:2023.09.02")
@@ -117,10 +150,13 @@
     //retorfit test
     testImplementation("com.squareup.okhttp3:mockwebserver:5.0.0-alpha.11")
 ```
+
 ## Running test
- - right click androidTest folder -> press Run All test
- - right click test folder -> press Run All test
+
+- right click androidTest folder -> press Run All test
+- right click test folder -> press Run All test
 
 ## Troubleshooting
+
 - If the app throwing errors when launching, please restart wifi on your device.
 
