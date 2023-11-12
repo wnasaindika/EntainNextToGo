@@ -7,7 +7,6 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,11 +15,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.entain.next.domain.model.NextToGo
 import com.entain.next.presentation.component.RacingFilters
 import com.entain.next.presentation.component.RacingItem
 import com.entain.next.presentation.data.RaceEvent
-import com.entain.next.presentation.data.RaceOrder
 import com.entain.next.presentation.data.RaceSelectState
 import com.entain.next.presentation.data.UiState
 import com.entain.next.presentation.event_mapper.raceSelectionStateMapper
@@ -32,16 +31,16 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun NextToGoScreen(vm: EntainViewModel) {
-    val state = vm.uiState.collectAsState()
-    when (val value = state.value) {
+fun NextToGoScreen(viewModel: EntainViewModel = hiltViewModel()) {
+
+    when (val state = viewModel.uiState.collectAsState().value) {
         is UiState.Loading -> LoadingState()
         is UiState.Error -> Error()
         is UiState.Success -> {
             SuccessState(
-                value.nextToGoRacing,
-                raceSelectionStateMapper(value.raceOrder),
-                vm::onRaceEvents
+                state.nextToGoRacing,
+                raceSelectionStateMapper(state.raceOrder),
+                viewModel::onRaceEvents
             )
         }
     }

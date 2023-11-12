@@ -1,15 +1,13 @@
 package com.entain.next.domain.repository
 
-import app.cash.turbine.test
 import com.entain.next.data.dto.AdvertisedStartDto
 import com.entain.next.data.dto.NextToGoDto
 import com.entain.next.data.dto.RaceSummaryDto
 import com.entain.next.data.dto.ResponseDto
-import com.entain.next.data.local.NextToGoEntity
+import com.entain.next.data.local.CachedNextToGo
+import com.entain.next.data.mapper.toNextToGo
 import com.entain.next.domain.model.Categories
-import com.entain.next.domain.util.Resource
 import com.entain.next.util.currentTimeToSeconds
-
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -20,68 +18,68 @@ class NextToGoRepositoryTest {
 
     private val fakeNextToGoRepository = FakeNextToGoRepository()
 
-    @Test
-    fun `test local cache is only work when events are not empty or not less than 5 or no expired items`() =
-        runTest {
-            fakeNextToGoRepository.emit(dbList = localData(), response = fetchSuccessData())
-            fakeNextToGoRepository.fetchNextToGoRacing().test {
-                val item1 = awaitItem()
-                val item2 = awaitItem()
-                val item3 = awaitItem()
-                assertTrue(item1 is Resource.Loading)
-                assertTrue(item2 is Resource.Success)
-                assertTrue(item3 is Resource.Loading)
-                assertEquals(7, item2.data?.count())
-                awaitComplete()
-            }
-        }
 
     @Test
-    fun `test invalidate expired race event and consume data from remote api`() =
-        runTest {
-            fakeNextToGoRepository.emit(dbList = localDataExpired(), response = fetchSuccessData())
-            fakeNextToGoRepository.fetchNextToGoRacing().test {
-                val item1 = awaitItem()
-                val item2 = awaitItem()
-                val item3 = awaitItem()
-                assertTrue(item1 is Resource.Loading)
-                assertTrue(item2 is Resource.Success)
-                assertTrue(item3 is Resource.Loading)
-                assertEquals(7, item2.data?.count())
-                assertEquals("name 0", item2.data?.first()?.meetingName)
-                awaitComplete()
-            }
-        }
+    fun `test fetch next to go racing work as expected when fetching success`() = runTest {
+        fakeNextToGoRepository.emit(dbList = localData())
+        val result = fakeNextToGoRepository.fetchNextToGoRacing()
+        assertEquals(null, result)
+        fakeNextToGoRepository.emit(dbList = localData(), response = fetchSuccessData())
+        val newResult = fakeNextToGoRepository.fetchNextToGoRacing()
+        assertTrue(newResult?.isSuccessful == true)
+        assertEquals(7, newResult?.body()?.data?.race_summaries?.count())
+    }
 
     @Test
-    fun `test the remote api error, if the local cached is expired (after 1 min) then error returning`() =
-        runTest {
-            fakeNextToGoRepository.emit(dbList = localDataExpired(), response = fetchErrorData())
-            fakeNextToGoRepository.fetchNextToGoRacing().test {
-                val item1 = awaitItem()
-                val item2 = awaitItem()
-                val item3 = awaitItem()
-                assertTrue(item1 is Resource.Loading)
-                assertTrue(item2 is Resource.Loading)
-                assertTrue(item3 is Resource.Error)
-                awaitComplete()
-            }
-        }
+    fun `test fetch next to go racing returns null when fetching errors`() = runTest {
+        fakeNextToGoRepository.emit(dbList = localData(), response = fetchErrorData())
+        val result = fakeNextToGoRepository.fetchNextToGoRacing()
+        assertTrue(result?.isSuccessful == true)
+        assertEquals(null, result?.body()?.data)
+    }
 
     @Test
-    fun `test when clearLocalCache clean up race event and then fetch remote data and new items are added to the local cached`() =
-        runTest {
-            fakeNextToGoRepository.emit(localData(), fetchSuccessData())
-            fakeNextToGoRepository.clearLocalCache()
-            fakeNextToGoRepository.fetchNextToGoRacing().test {
-                val item1 = awaitItem()
-                val item2 = awaitItem()
-                val item3 = awaitItem()
-                assertEquals(7, item2.data?.count())
-                assertEquals("name 0", item2.data?.first()?.meetingName)
-                awaitComplete()
-            }
-        }
+    fun `test clear cache and extract remote data as CachedNextToGo`() = runTest {
+        fakeNextToGoRepository.emit(dbList = localDataExpired())
+        val cached = fakeNextToGoRepository.getNextToGo()
+        assertEquals(1, cached.count())
+        assertEquals("expired test", cached.first().cachedMeetingName)
+        val result = fakeNextToGoRepository.clearCacheAndExtractRemoteData(fetchSuccessData())
+        assertEquals(7, result?.count())
+        assertEquals("name 0", result?.first()?.cachedMeetingName)
+    }
+
+    @Test
+    fun `test clear cache work as expected`() = runTest {
+        fakeNextToGoRepository.emit(dbList = localDataExpired())
+        val cached = fakeNextToGoRepository.getNextToGo()
+        assertEquals(1, cached.count())
+        assertEquals("expired test", cached.first().cachedMeetingName)
+        fakeNextToGoRepository.clearLocalCache()
+        val newCached = fakeNextToGoRepository.getNextToGo()
+        assertEquals(0, newCached.count())
+    }
+
+    @Test
+    fun `test delete expired cached work as expected`() = runTest {
+        fakeNextToGoRepository.emit(dbList = localDataExpired() + localData())
+        val cached = fakeNextToGoRepository.getNextToGo()
+        assertEquals(2, cached.count())
+        fakeNextToGoRepository.deleteExpiredCachedEvent(localDataExpired().map { it.toNextToGo() }
+            .first())
+        val newCached = fakeNextToGoRepository.getNextToGo()
+        assertEquals(1, newCached.count())
+    }
+
+    @Test
+    fun `test delete all expired cache work as expected`() = runTest {
+        fakeNextToGoRepository.emit(dbList = localDataExpired() + localDataExpired())
+        val cached = fakeNextToGoRepository.getNextToGo()
+        assertEquals(2, cached.count())
+        fakeNextToGoRepository.deleteExpiredEvents()
+        val newCached = fakeNextToGoRepository.getNextToGo()
+        assertEquals(0, newCached.count())
+    }
 
     private fun fetchErrorData() = Response.success(
         ResponseDto(
@@ -116,22 +114,22 @@ class NextToGoRepositoryTest {
     }
 
     private fun localDataExpired() = listOf(
-        NextToGoEntity(
-            raceId = "test",
-            adCategory = Categories.Harness,
-            raceNumber = "1",
-            meetingName = "tes",
-            adStartTimeInSeconds = currentTimeToSeconds() - 65L
+        CachedNextToGo(
+            cachedRaceId = "2312311 2",
+            cachedAdCategory = Categories.Harness,
+            cachedRaceNumber = "1",
+            cachedMeetingName = "expired test",
+            cachedAdStartTimeInSeconds = currentTimeToSeconds() - 65L
         )
     )
 
     private fun localData() = listOf(
-        NextToGoEntity(
-            raceId = "test",
-            adCategory = Categories.Harness,
-            raceNumber = "1",
-            meetingName = "tes",
-            adStartTimeInSeconds = currentTimeToSeconds() + 65L
+        CachedNextToGo(
+            cachedRaceId = "test",
+            cachedAdCategory = Categories.Harness,
+            cachedRaceNumber = "1",
+            cachedMeetingName = "tes",
+            cachedAdStartTimeInSeconds = currentTimeToSeconds() + 65L
         )
     )
 }

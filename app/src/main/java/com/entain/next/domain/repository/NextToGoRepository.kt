@@ -1,12 +1,16 @@
 package com.entain.next.domain.repository
 
+import com.entain.next.data.dto.ResponseDto
+import com.entain.next.data.local.CachedNextToGo
 import com.entain.next.domain.model.NextToGo
-import com.entain.next.domain.util.Resource
-import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 
 interface NextToGoRepository {
-    suspend fun fetchNextToGoRacing(): Flow<Resource<List<NextToGo>>>
+    suspend fun fetchNextToGoRacing(): Response<ResponseDto>?
     suspend fun clearLocalCache()
-    suspend fun deleteExpiredEvent(nextToGo: NextToGo?)
-    suspend fun  deleteExpiredEvents()
+    suspend fun deleteExpiredCachedEvent(nextToGo: NextToGo?)
+    suspend fun deleteExpiredEvents()
+    suspend fun clearCacheAndExtractRemoteData(remoteData: Response<ResponseDto>?): List<CachedNextToGo>?
+    suspend fun getNextToGo(): List<CachedNextToGo>
+    suspend fun insertRemoteDataToLocalCache(nextToGoRacing: List<CachedNextToGo>)
 }

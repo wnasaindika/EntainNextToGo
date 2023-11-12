@@ -50,11 +50,6 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNextToGoRepository(
-        entainApi: EntainApi,
-        nextToGoDb: NextToGoDb
-    ): NextToGoRepository =
-        NextToGoRepositoryImpl(entainApi, nextToGoDb)
-
+    fun provideNextToGoDao(db: NextToGoDb) = db.nextToGoDao()
 
 }

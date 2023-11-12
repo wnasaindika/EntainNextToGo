@@ -5,23 +5,22 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.entain.next.domain.model.Categories
 
 @Dao
 interface NextToGoDao {
 
-    @Query("SELECT * FROM nexttogoentity")
-    suspend fun getNextToGo(): List<NextToGoEntity>
+    @Query("SELECT * FROM cachednexttogo")
+    suspend fun getNextToGo(): List<CachedNextToGo>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertNextToGoRacing(nextToGoRacing: List<NextToGoEntity>)
+    suspend fun insertNextToGoRacing(nextToGoRacing: List<CachedNextToGo>)
 
-    @Query("SELECT * FROM nexttogoentity WHERE id=:id")
-    suspend fun getNextToGoByCategory(id: Int): NextToGoEntity
+    @Query("SELECT * FROM cachednexttogo WHERE id=:id")
+    suspend fun getNextToGoById(id: Int): CachedNextToGo
 
     @Delete
-    suspend fun delete(nextToGoEntity: NextToGoEntity)
+    suspend fun delete(nextToGoEntity: CachedNextToGo)
 
-    @Query("DELETE FROM nexttogoentity")
+    @Query("DELETE FROM cachednexttogo")
     suspend fun clearAllNextToGo()
 }

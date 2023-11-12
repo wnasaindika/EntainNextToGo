@@ -3,12 +3,10 @@ package com.entain.next.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.entain.next.domain.model.NextToGo
 import com.entain.next.domain.usecase.NextToGoRacing
 import com.entain.next.domain.util.Resource
 import com.entain.next.presentation.data.RaceEvent
 import com.entain.next.presentation.data.RaceOrder
-import com.entain.next.presentation.data.RaceSelectState
 import com.entain.next.presentation.data.UiState
 import com.entain.next.presentation.event_mapper.RaceCombinations
 import com.entain.next.presentation.event_mapper.raceOrderMapper
@@ -22,7 +20,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class EntainViewModel @Inject constructor(private val nextToGoRacing: NextToGoRacing) :
+class EntainViewModel @Inject constructor(private val nextToGoRacingImpl: NextToGoRacing) :
     ViewModel() {
 
     private val _uiState = MutableStateFlow<UiState>(UiState.Loading)
@@ -35,10 +33,10 @@ class EntainViewModel @Inject constructor(private val nextToGoRacing: NextToGoRa
 
     fun onRaceEvents(event: RaceEvent) {
         viewModelScope.launch {
-            nextToGoRacing.checkAndRemoveExpiredEvents()
+            nextToGoRacingImpl.checkAndRemoveExpiredEvents()
             when (event) {
                 is RaceEvent.Refresh -> {
-                    nextToGoRacing.refresh()
+                    nextToGoRacingImpl.refresh()
                     fetchRacingData(RaceOrder.ALL)
                 }
 
@@ -47,7 +45,7 @@ class EntainViewModel @Inject constructor(private val nextToGoRacing: NextToGoRa
                 }
 
                 is RaceEvent.ExpiredRace -> {
-                    nextToGoRacing.removeExpiredEventFromCache(event.nextToGo)
+                    nextToGoRacingImpl.removeExpiredEventFromCache(event.nextToGo)
                     fetchRacingData(raceOrder = raceOrderMapper(event.selectState))
                 }
             }
@@ -55,7 +53,7 @@ class EntainViewModel @Inject constructor(private val nextToGoRacing: NextToGoRa
     }
 
     private suspend fun fetchRacingData(raceOrder: RaceOrder) {
-        nextToGoRacing.invoke(raceOrder).onEach {
+        nextToGoRacingImpl.invoke(raceOrder).onEach {
             when (it) {
                 is Resource.Loading -> {
                     if (it.isLoading)
