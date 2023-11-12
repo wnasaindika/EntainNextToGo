@@ -1,7 +1,7 @@
 package com.entain.next.domain.repository
 
 import com.entain.next.data.dto.ResponseDto
-import com.entain.next.data.local.CachedNextToGo
+import com.entain.next.data.local.LocalRaceSummery
 import com.entain.next.data.mapper.toNextToGo
 import com.entain.next.data.mapper.toNextToGoEntity
 import com.entain.next.domain.model.NextToGo
@@ -11,10 +11,10 @@ import retrofit2.Response
 
 class FakeNextToGoRepository : NextToGoRepository {
 
-    private val dbData = mutableListOf<CachedNextToGo>()
+    private val dbData = mutableListOf<LocalRaceSummery>()
     private val remoteDate = mutableListOf<Response<ResponseDto>?>(null)
 
-    fun emit(dbList: List<CachedNextToGo>, response: Response<ResponseDto>? = null) {
+    fun emit(dbList: List<LocalRaceSummery>, response: Response<ResponseDto>? = null) {
         dbData.clear()
         remoteDate.clear()
         dbData.addAll(dbList)
@@ -33,21 +33,21 @@ class FakeNextToGoRepository : NextToGoRepository {
 
     override suspend fun deleteExpiredEvents() {
         val expiredData = dbData
-            .filter { (it.cachedAdStartTimeInSeconds - currentTimeToSeconds()) <= -SECONDS }
+            .filter { (it.adStartTimeInSeconds - currentTimeToSeconds()) <= -SECONDS }
         expiredData.forEach {
             dbData.remove(it)
         }
     }
 
-    override suspend fun clearCacheAndExtractRemoteData(remoteData: Response<ResponseDto>?): List<CachedNextToGo>? {
+    override suspend fun clearCacheAndExtractRemoteData(remoteData: Response<ResponseDto>?): List<LocalRaceSummery>? {
         dbData.clear()
         return remoteData?.body()?.data?.race_summaries?.values?.map { it.toNextToGoEntity() }
     }
 
-    override suspend fun getNextToGo(): List<CachedNextToGo>  {
-       return dbData 
+    override suspend fun getNextToGo(): List<LocalRaceSummery>  {
+       return dbData
     }
-    override suspend fun insertRemoteDataToLocalCache(nextToGoRacing: List<CachedNextToGo>) {
+    override suspend fun insertRemoteDataToLocalCache(nextToGoRacing: List<LocalRaceSummery>) {
         dbData.addAll(nextToGoRacing)
     }
 }

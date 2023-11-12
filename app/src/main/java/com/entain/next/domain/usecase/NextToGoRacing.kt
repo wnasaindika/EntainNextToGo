@@ -1,6 +1,6 @@
 package com.entain.next.domain.usecase
 
-import com.entain.next.data.local.CachedNextToGo
+import com.entain.next.data.local.LocalRaceSummery
 import com.entain.next.data.mapper.toNextToGo
 import com.entain.next.domain.model.Categories
 import com.entain.next.domain.model.NextToGo
@@ -99,9 +99,9 @@ class NextToGoRacing @Inject constructor(private val nextToGoRepository: NextToG
         nextToGoRepository.deleteExpiredEvents()
     }
 
-    private fun hasExpiredRacing(racing: List<CachedNextToGo>) =
-        racing.all { (it.cachedAdStartTimeInSeconds - currentTimeToSeconds()) < -SECONDS }
+    private fun hasExpiredRacing(racing: List<LocalRaceSummery>) =
+        racing.all { (it.adStartTimeInSeconds - currentTimeToSeconds()) < -SECONDS }
 
-    private fun shouldLoadFromCache(localData: List<CachedNextToGo>) =
+    private fun shouldLoadFromCache(localData: List<LocalRaceSummery>) =
         localData.isNotEmpty() && !hasExpiredRacing(localData) && localData.count() > 5
 }

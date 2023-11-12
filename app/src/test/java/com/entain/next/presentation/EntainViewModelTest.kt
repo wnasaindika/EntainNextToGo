@@ -1,12 +1,10 @@
 package com.entain.next.presentation
 
-import app.cash.turbine.test
 import com.entain.next.domain.model.Categories
 import com.entain.next.domain.model.NextToGo
 import com.entain.next.domain.usecase.NextToGoRacing
 import com.entain.next.domain.util.Resource
 import com.entain.next.presentation.data.RaceEvent
-import com.entain.next.presentation.data.RaceOrder
 import com.entain.next.presentation.data.UiState
 import com.entain.next.presentation.event_mapper.RaceCombinations
 import com.entain.next.util.currentTimeToSeconds

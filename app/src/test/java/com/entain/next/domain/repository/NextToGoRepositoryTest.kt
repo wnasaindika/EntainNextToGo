@@ -4,7 +4,7 @@ import com.entain.next.data.dto.AdvertisedStartDto
 import com.entain.next.data.dto.NextToGoDto
 import com.entain.next.data.dto.RaceSummaryDto
 import com.entain.next.data.dto.ResponseDto
-import com.entain.next.data.local.CachedNextToGo
+import com.entain.next.data.local.LocalRaceSummery
 import com.entain.next.data.mapper.toNextToGo
 import com.entain.next.domain.model.Categories
 import com.entain.next.util.currentTimeToSeconds
@@ -43,10 +43,10 @@ class NextToGoRepositoryTest {
         fakeNextToGoRepository.emit(dbList = localDataExpired())
         val cached = fakeNextToGoRepository.getNextToGo()
         assertEquals(1, cached.count())
-        assertEquals("expired test", cached.first().cachedMeetingName)
+        assertEquals("expired test", cached.first().meetingName)
         val result = fakeNextToGoRepository.clearCacheAndExtractRemoteData(fetchSuccessData())
         assertEquals(7, result?.count())
-        assertEquals("name 0", result?.first()?.cachedMeetingName)
+        assertEquals("name 0", result?.first()?.meetingName)
     }
 
     @Test
@@ -54,7 +54,7 @@ class NextToGoRepositoryTest {
         fakeNextToGoRepository.emit(dbList = localDataExpired())
         val cached = fakeNextToGoRepository.getNextToGo()
         assertEquals(1, cached.count())
-        assertEquals("expired test", cached.first().cachedMeetingName)
+        assertEquals("expired test", cached.first().meetingName)
         fakeNextToGoRepository.clearLocalCache()
         val newCached = fakeNextToGoRepository.getNextToGo()
         assertEquals(0, newCached.count())
@@ -114,22 +114,22 @@ class NextToGoRepositoryTest {
     }
 
     private fun localDataExpired() = listOf(
-        CachedNextToGo(
-            cachedRaceId = "2312311 2",
-            cachedAdCategory = Categories.Harness,
-            cachedRaceNumber = "1",
-            cachedMeetingName = "expired test",
-            cachedAdStartTimeInSeconds = currentTimeToSeconds() - 65L
+        LocalRaceSummery(
+            raceId = "2312311 2",
+            adCategory = Categories.Harness,
+            raceNumber = "1",
+            meetingName = "expired test",
+            adStartTimeInSeconds = currentTimeToSeconds() - 65L
         )
     )
 
     private fun localData() = listOf(
-        CachedNextToGo(
-            cachedRaceId = "test",
-            cachedAdCategory = Categories.Harness,
-            cachedRaceNumber = "1",
-            cachedMeetingName = "tes",
-            cachedAdStartTimeInSeconds = currentTimeToSeconds() + 65L
+        LocalRaceSummery(
+            raceId = "test",
+            adCategory = Categories.Harness,
+            raceNumber = "1",
+            meetingName = "tes",
+            adStartTimeInSeconds = currentTimeToSeconds() + 65L
         )
     )
 }

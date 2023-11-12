@@ -9,18 +9,18 @@ import androidx.room.Query
 @Dao
 interface NextToGoDao {
 
-    @Query("SELECT * FROM cachednexttogo")
-    suspend fun getNextToGo(): List<CachedNextToGo>
+    @Query("SELECT * FROM localracesummery")
+    suspend fun getNextToGo(): List<LocalRaceSummery>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertNextToGoRacing(nextToGoRacing: List<CachedNextToGo>)
+    suspend fun insertNextToGoRacing(nextToGoRacing: List<LocalRaceSummery>)
 
-    @Query("SELECT * FROM cachednexttogo WHERE id=:id")
-    suspend fun getNextToGoById(id: Int): CachedNextToGo
+    @Query("SELECT * FROM localracesummery WHERE id=:id")
+    suspend fun getNextToGoById(id: Int): LocalRaceSummery
 
     @Delete
-    suspend fun delete(nextToGoEntity: CachedNextToGo)
+    suspend fun delete(nextToGoEntity: LocalRaceSummery)
 
-    @Query("DELETE FROM cachednexttogo")
+    @Query("DELETE FROM localracesummery")
     suspend fun clearAllNextToGo()
 }

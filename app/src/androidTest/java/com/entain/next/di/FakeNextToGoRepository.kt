@@ -4,7 +4,7 @@ import com.entain.next.data.dto.AdvertisedStartDto
 import com.entain.next.data.dto.NextToGoDto
 import com.entain.next.data.dto.RaceSummaryDto
 import com.entain.next.data.dto.ResponseDto
-import com.entain.next.data.local.CachedNextToGo
+import com.entain.next.data.local.LocalRaceSummery
 import com.entain.next.data.mapper.toNextToGo
 import com.entain.next.data.mapper.toNextToGoEntity
 import com.entain.next.data.util.grayHound
@@ -20,7 +20,7 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class FakeNextToGoRepository @Inject constructor() : NextToGoRepository {
-    private val dbData = mutableListOf<CachedNextToGo>()
+    private val dbData = mutableListOf<LocalRaceSummery>()
     private val remoteData = MutableStateFlow<Response<ResponseDto>?>(null)
 
     init {
@@ -45,22 +45,22 @@ class FakeNextToGoRepository @Inject constructor() : NextToGoRepository {
 
     override suspend fun deleteExpiredEvents() {
         val expiredData = dbData
-            .filter { (it.cachedAdStartTimeInSeconds - currentTimeToSeconds()) <= -SECONDS }
+            .filter { (it.adStartTimeInSeconds - currentTimeToSeconds()) <= -SECONDS }
         expiredData.forEach {
             dbData.remove(it)
         }
     }
 
-    override suspend fun clearCacheAndExtractRemoteData(remoteData: Response<ResponseDto>?): List<CachedNextToGo>? {
+    override suspend fun clearCacheAndExtractRemoteData(remoteData: Response<ResponseDto>?): List<LocalRaceSummery>? {
         dbData.clear()
         return remoteData?.body()?.data?.race_summaries?.values?.map { it.toNextToGoEntity() }
     }
 
-    override suspend fun getNextToGo(): List<CachedNextToGo> {
+    override suspend fun getNextToGo(): List<LocalRaceSummery> {
         return dbData
     }
 
-    override suspend fun insertRemoteDataToLocalCache(nextToGoRacing: List<CachedNextToGo>) {
+    override suspend fun insertRemoteDataToLocalCache(nextToGoRacing: List<LocalRaceSummery>) {
         dbData.addAll(nextToGoRacing)
     }
 
