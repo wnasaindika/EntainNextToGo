@@ -5,7 +5,7 @@ import com.entain.next.data.dto.NextToGoDto
 import com.entain.next.data.dto.RaceSummaryDto
 import com.entain.next.data.dto.ResponseDto
 import com.entain.next.data.local.LocalRaceSummery
-import com.entain.next.data.mapper.toNextToGo
+import com.entain.next.data.mapper.toLocalRaceSummery
 import com.entain.next.domain.model.Categories
 import com.entain.next.util.currentTimeToSeconds
 import kotlinx.coroutines.test.runTest
@@ -65,7 +65,7 @@ class NextToGoRepositoryTest {
         fakeNextToGoRepository.emit(dbList = localDataExpired() + localData())
         val cached = fakeNextToGoRepository.getNextToGo()
         assertEquals(2, cached.count())
-        fakeNextToGoRepository.deleteExpiredCachedEvent(localDataExpired().map { it.toNextToGo() }
+        fakeNextToGoRepository.deleteExpiredCachedEvent(localDataExpired().map { it.toLocalRaceSummery() }
             .first())
         val newCached = fakeNextToGoRepository.getNextToGo()
         assertEquals(1, newCached.count())

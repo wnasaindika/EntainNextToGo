@@ -5,8 +5,7 @@ import com.entain.next.data.dto.NextToGoDto
 import com.entain.next.data.dto.RaceSummaryDto
 import com.entain.next.data.dto.ResponseDto
 import com.entain.next.data.local.LocalRaceSummery
-import com.entain.next.data.mapper.toNextToGo
-import com.entain.next.data.mapper.toNextToGoEntity
+import com.entain.next.data.mapper.toLocalRaceSummery
 import com.entain.next.data.util.grayHound
 import com.entain.next.data.util.harness
 import com.entain.next.data.util.horse
@@ -29,7 +28,7 @@ class FakeNextToGoRepository @Inject constructor() : NextToGoRepository {
 
     private fun emit(stab: Response<ResponseDto>?) {
         dbData.clear()
-        dbData.addAll(stab?.body()?.data?.race_summaries?.values?.map { it.toNextToGoEntity() }
+        dbData.addAll(stab?.body()?.data?.race_summaries?.values?.map { it.toLocalRaceSummery() }
             ?: listOf())
     }
 
@@ -40,7 +39,7 @@ class FakeNextToGoRepository @Inject constructor() : NextToGoRepository {
     }
 
     override suspend fun deleteExpiredCachedEvent(nextToGo: NextToGo?) {
-        dbData.remove(nextToGo?.toNextToGo())
+        dbData.remove(nextToGo?.toLocalRaceSummery())
     }
 
     override suspend fun deleteExpiredEvents() {
@@ -53,7 +52,7 @@ class FakeNextToGoRepository @Inject constructor() : NextToGoRepository {
 
     override suspend fun clearCacheAndExtractRemoteData(remoteData: Response<ResponseDto>?): List<LocalRaceSummery>? {
         dbData.clear()
-        return remoteData?.body()?.data?.race_summaries?.values?.map { it.toNextToGoEntity() }
+        return remoteData?.body()?.data?.race_summaries?.values?.map { it.toLocalRaceSummery() }
     }
 
     override suspend fun getNextToGo(): List<LocalRaceSummery> {

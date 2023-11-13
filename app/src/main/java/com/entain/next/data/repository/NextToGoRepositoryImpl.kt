@@ -3,8 +3,7 @@ package com.entain.next.data.repository
 import com.entain.next.data.dto.ResponseDto
 import com.entain.next.data.local.LocalRaceSummery
 import com.entain.next.data.local.NextToGoDb
-import com.entain.next.data.mapper.toNextToGo
-import com.entain.next.data.mapper.toNextToGoEntity
+import com.entain.next.data.mapper.toLocalRaceSummery
 import com.entain.next.data.remote.EntainApi
 import com.entain.next.domain.model.NextToGo
 import com.entain.next.domain.repository.NextToGoRepository
@@ -21,16 +20,14 @@ class NextToGoRepositoryImpl @Inject constructor(
     private val localDb = db.nextToGoDao()
 
     override suspend fun fetchNextToGoRacing(): Response<ResponseDto>? = getRemoteData()
-    override suspend fun getNextToGo(): List<LocalRaceSummery> {
-        return localDb.getNextToGo()
-    }
+    override suspend fun getNextToGo(): List<LocalRaceSummery> = localDb.getNextToGo()
 
     override suspend fun clearLocalCache() {
         localDb.clearAllNextToGo()
     }
 
     override suspend fun deleteExpiredCachedEvent(nextToGo: NextToGo?) {
-        nextToGo?.toNextToGo()?.let {
+        nextToGo?.toLocalRaceSummery()?.let {
             localDb.delete(it)
         }
     }
@@ -45,7 +42,7 @@ class NextToGoRepositoryImpl @Inject constructor(
 
    override suspend fun clearCacheAndExtractRemoteData(remoteData: Response<ResponseDto>?): List<LocalRaceSummery>? {
         localDb.clearAllNextToGo()
-        return remoteData?.body()?.data?.race_summaries?.values?.map { it.toNextToGoEntity() }
+        return remoteData?.body()?.data?.race_summaries?.values?.map { it.toLocalRaceSummery() }
     }
 
     override suspend fun insertRemoteDataToLocalCache(nextToGoRacing: List<LocalRaceSummery>) {

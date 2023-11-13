@@ -9,7 +9,7 @@ import com.entain.next.domain.model.Categories
 import com.entain.next.domain.model.NextToGo
 
 
-fun RaceSummaryDto.toNextToGoEntity(): LocalRaceSummery {
+fun RaceSummaryDto.toLocalRaceSummery(): LocalRaceSummery {
     return LocalRaceSummery(
         raceId = this.race_id,
         meetingName = this.meeting_name,
@@ -24,7 +24,7 @@ fun RaceSummaryDto.toNextToGoEntity(): LocalRaceSummery {
     )
 }
 
-fun LocalRaceSummery.toNextToGo(): NextToGo {
+fun LocalRaceSummery.toLocalRaceSummery(): NextToGo {
     return NextToGo(
         raceId = this.raceId,
         meetingName = this.meetingName,
@@ -34,7 +34,7 @@ fun LocalRaceSummery.toNextToGo(): NextToGo {
     )
 }
 
-fun NextToGo.toNextToGo(): LocalRaceSummery {
+fun NextToGo.toLocalRaceSummery(): LocalRaceSummery {
     return LocalRaceSummery(
         raceId = this.raceId,
         meetingName = this.meetingName,

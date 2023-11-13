@@ -2,8 +2,7 @@ package com.entain.next.domain.repository
 
 import com.entain.next.data.dto.ResponseDto
 import com.entain.next.data.local.LocalRaceSummery
-import com.entain.next.data.mapper.toNextToGo
-import com.entain.next.data.mapper.toNextToGoEntity
+import com.entain.next.data.mapper.toLocalRaceSummery
 import com.entain.next.domain.model.NextToGo
 import com.entain.next.util.SECONDS
 import com.entain.next.util.currentTimeToSeconds
@@ -28,7 +27,7 @@ class FakeNextToGoRepository : NextToGoRepository {
     }
 
     override suspend fun deleteExpiredCachedEvent(nextToGo: NextToGo?) {
-        dbData.remove(nextToGo?.toNextToGo())
+        dbData.remove(nextToGo?.toLocalRaceSummery())
     }
 
     override suspend fun deleteExpiredEvents() {
@@ -41,7 +40,7 @@ class FakeNextToGoRepository : NextToGoRepository {
 
     override suspend fun clearCacheAndExtractRemoteData(remoteData: Response<ResponseDto>?): List<LocalRaceSummery>? {
         dbData.clear()
-        return remoteData?.body()?.data?.race_summaries?.values?.map { it.toNextToGoEntity() }
+        return remoteData?.body()?.data?.race_summaries?.values?.map { it.toLocalRaceSummery() }
     }
 
     override suspend fun getNextToGo(): List<LocalRaceSummery>  {

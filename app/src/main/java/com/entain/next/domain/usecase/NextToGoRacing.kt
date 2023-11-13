@@ -1,7 +1,7 @@
 package com.entain.next.domain.usecase
 
 import com.entain.next.data.local.LocalRaceSummery
-import com.entain.next.data.mapper.toNextToGo
+import com.entain.next.data.mapper.toLocalRaceSummery
 import com.entain.next.domain.model.Categories
 import com.entain.next.domain.model.NextToGo
 import com.entain.next.domain.repository.NextToGoRepository
@@ -24,7 +24,7 @@ class NextToGoRacing @Inject constructor(private val nextToGoRepository: NextToG
             val localData = nextToGoRepository.getNextToGo()
             if (shouldLoadFromCache(localData)) {
                 emit(Resource.Loading(false))
-                emit(Resource.Success(getSortedList(raceOrder, localData.map { it.toNextToGo() })))
+                emit(Resource.Success(getSortedList(raceOrder, localData.map { it.toLocalRaceSummery() })))
                 return@flow
             }
 
@@ -51,7 +51,7 @@ class NextToGoRacing @Inject constructor(private val nextToGoRepository: NextToG
                 Resource.Success(
                     getSortedList(
                         raceOrder,
-                        freshDataFromLocalData.map { it.toNextToGo() })
+                        freshDataFromLocalData.map { it.toLocalRaceSummery() })
                 )
             )
             emit(Resource.Loading(false))

@@ -5,8 +5,7 @@ import com.entain.next.data.dto.AdvertisedStartDto
 import com.entain.next.data.dto.NextToGoDto
 import com.entain.next.data.dto.RaceSummaryDto
 import com.entain.next.data.dto.ResponseDto
-import com.entain.next.data.mapper.toNextToGo
-import com.entain.next.data.mapper.toNextToGoEntity
+import com.entain.next.data.mapper.toLocalRaceSummery
 import com.entain.next.data.util.grayHound
 import com.entain.next.data.util.harness
 import com.entain.next.data.util.horse
@@ -34,7 +33,7 @@ class NextToGoRacingTest {
         fakeRepository = mockk()
         nextToGoRacingImpl = NextToGoRacing(fakeRepository)
         coEvery { fakeRepository.fetchNextToGoRacing() } returns fakeSuccessResponse()
-        coEvery { fakeRepository.getNextToGo() } returns fakeData().map { it.toNextToGoEntity() }
+        coEvery { fakeRepository.getNextToGo() } returns fakeData().map { it.toLocalRaceSummery() }
     }
 
     @Test
@@ -124,8 +123,8 @@ class NextToGoRacingTest {
     fun `test delete expired event when user remove expired event from cache`() = runTest {
 
         coEvery { fakeRepository.deleteExpiredCachedEvent(any()) } returns Unit
-        nextToGoRacingImpl.removeExpiredEventFromCache(fakeData().map { it.toNextToGoEntity() }
-            .map { it.toNextToGo() }.first())
+        nextToGoRacingImpl.removeExpiredEventFromCache(fakeData().map { it.toLocalRaceSummery() }
+            .map { it.toLocalRaceSummery() }.first())
         coVerify(exactly = 1) {
             fakeRepository.deleteExpiredCachedEvent(any())
         }
