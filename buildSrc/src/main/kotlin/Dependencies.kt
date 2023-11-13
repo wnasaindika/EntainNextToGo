@@ -29,6 +29,7 @@ object Dependencies {
     const val composeUiTooling = "androidx.compose.ui:ui-tooling"
     const val composeUiTest = "androidx.compose.ui:ui-test-junit4"
     const val composeUiTestManifest = "androidx.compose.ui:ui-test-manifest"
+    const val matirail3WindowSize = "androidx.compose.material3:material3-window-size-class"
 
     const val turbine = "app.cash.turbine:turbine:${Versions.turbine}"
 

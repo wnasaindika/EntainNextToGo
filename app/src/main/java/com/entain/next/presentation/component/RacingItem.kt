@@ -22,11 +22,14 @@ import com.entain.next.R
 import com.entain.next.domain.model.Categories
 import com.entain.next.domain.model.NextToGo
 import com.entain.next.util.ContentDescriptionUtil
+import com.entain.next.util.RACE_ITEM_HEIGHT_COMPACT
+import com.entain.next.util.RACE_ITEM_HEIGHT_LARGE
 import com.entain.next.util.currentTimeToSeconds
 
 @Composable
 fun RacingItem(
     nextToGo: NextToGo,
+    isNotCompact: Boolean,
     onRaceExpired: (NextToGo) -> Unit
 ) {
 
@@ -39,21 +42,21 @@ fun RacingItem(
     Surface(
         color = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.defaultMinSize(minHeight = 80.dp),
+        modifier = Modifier.defaultMinSize(minHeight = if (isNotCompact) RACE_ITEM_HEIGHT_LARGE else RACE_ITEM_HEIGHT_COMPACT),
         shadowElevation = 5.dp
     ) {
         ListItem(
             headlineContent = {
                 Text(
                     nextToGo.meetingName,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = if (isNotCompact) MaterialTheme.typography.titleLarge else MaterialTheme.typography.titleMedium,
                     overflow = TextOverflow.Ellipsis
                 )
             },
             supportingContent = {
                 Text(
                     "${stringResource(id = R.string.race_number)} ${nextToGo.raceNumber}",
-                    style = MaterialTheme.typography.titleSmall
+                    style = if (isNotCompact) MaterialTheme.typography.titleMedium else MaterialTheme.typography.titleSmall
                 )
             },
             trailingContent = {
@@ -89,7 +92,8 @@ fun ShowRacingItem() {
             raceNumber = "10",
             adCategory = Categories.Harness,
             raceId = "abc",
-        )
+        ),
+        false
     ) {
 
     }
