@@ -60,7 +60,7 @@ fun SuccessState(
 
     val activity = LocalContext.current as Activity
     val windowSize = calculateWindowSizeClass(activity = activity)
-    val isNotCompact = windowSize.widthSizeClass != WindowWidthSizeClass.Expanded
+    val isNotCompact = windowSize.widthSizeClass != WindowWidthSizeClass.Compact
 
     Box {
         var isRefreshing by remember { mutableStateOf(false) }
