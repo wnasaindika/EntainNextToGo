@@ -85,6 +85,7 @@ fun DependencyHandler.compose() {
     implementation(Dependencies.composeMatirial3)
     implementation(Dependencies.composeMatirial)
     implementation(Dependencies.googleMatirial)
+    implementation(Dependencies.matirail3WindowSize)
     implementation(Dependencies.composeToolingPreview)
     debugImplementation(Dependencies.composeUiTooling)
     debugImplementation(Dependencies.composeUiTestManifest)

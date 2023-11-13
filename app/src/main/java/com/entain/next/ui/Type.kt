@@ -14,13 +14,14 @@ val typography = Typography(
     ),
     titleLarge = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 24.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
+        fontSize = 28.sp,
+        lineHeight = 32.sp,
+        letterSpacing = 0.5.sp,
+        color = seed
     ),
     titleMedium = TextStyle(
         fontWeight = FontWeight.Bold,
-        fontSize = 16.sp,
+        fontSize = 18.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp,
         color = seed
@@ -33,10 +34,10 @@ val typography = Typography(
         color = seed
     ),
     bodyLarge = TextStyle(
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.15.sp
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp,
+        lineHeight = 32.sp,
+        letterSpacing = 0.25.sp
     ),
     bodyMedium = TextStyle(
         fontWeight = FontWeight.Medium,

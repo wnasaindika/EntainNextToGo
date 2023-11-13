@@ -1,11 +1,15 @@
 package com.entain.next.presentation
 
+import android.app.Activity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -15,6 +19,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.entain.next.domain.model.NextToGo
 import com.entain.next.presentation.component.RacingFilters
@@ -32,7 +37,6 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun NextToGoScreen(viewModel: EntainViewModel = hiltViewModel()) {
-
     when (val state = viewModel.uiState.collectAsState().value) {
         is UiState.Loading -> LoadingState()
         is UiState.Error -> Error()
@@ -46,13 +50,18 @@ fun NextToGoScreen(viewModel: EntainViewModel = hiltViewModel()) {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun SuccessState(
     nextToGoRacingSummary: List<NextToGo>,
     selected: RaceSelectState,
     onRaceEvent: (RaceEvent) -> Unit
 ) {
+
+    val activity = LocalContext.current as Activity
+    val windowSize = calculateWindowSizeClass(activity = activity)
+    val isNotCompact = windowSize.widthSizeClass != WindowWidthSizeClass.Expanded
+
     Box {
         var isRefreshing by remember { mutableStateOf(false) }
         val coroutineScope = rememberCoroutineScope()
@@ -69,13 +78,13 @@ fun SuccessState(
         val state = rememberPullRefreshState(refreshing = isRefreshing, onRefresh = ::refresh)
         LazyColumn(modifier = Modifier.pullRefresh(state)) {
             item {
-                RacingFilters(selected) {
+                RacingFilters(selected, isNotCompact) {
                     onRaceEvent.invoke(RaceEvent.SelectRace(it))
                 }
             }
             nextToGoRacingSummary.forEachIndexed { index, nextToGo ->
                 item(key = index) {
-                    RacingItem(nextToGo = nextToGo) {
+                    RacingItem(nextToGo = nextToGo, isNotCompact) {
                         onRaceEvent.invoke(RaceEvent.ExpiredRace(selected, it))
                     }
                 }

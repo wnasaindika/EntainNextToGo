@@ -3,6 +3,7 @@ package com.entain.next.presentation.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -28,9 +29,15 @@ import com.entain.next.presentation.data.RaceSelectState
 import com.entain.next.presentation.event_mapper.RaceCombinations
 import com.entain.next.ui.EntainTheme
 import com.entain.next.util.ContentDescriptionUtil
+import com.entain.next.util.FILTER_HEIGHT_COMPACT
+import com.entain.next.util.FILTER_HEIGHT_LARGE
 
 @Composable
-fun RacingFilters(raceSelectState: RaceSelectState, onRaceSelect: (RaceSelectState) -> Unit) {
+fun RacingFilters(
+    raceSelectState: RaceSelectState,
+    isNotCompact: Boolean,
+    onRaceSelect: (RaceSelectState) -> Unit
+) {
 
     var selectedStatus by remember {
         mutableStateOf(raceSelectState)
@@ -46,6 +53,7 @@ fun RacingFilters(raceSelectState: RaceSelectState, onRaceSelect: (RaceSelectSta
         RacingFilterItem(
             selectedStatus = selectedStatus.horseSelected,
             raceType = stringResource(id = R.string.horse),
+            isNotCompact = isNotCompact,
             iconContentDescription = ContentDescriptionUtil.HORSE_SELECT,
             containerContentDescription = ContentDescriptionUtil.HORSE_BUTTON
         ) {
@@ -57,6 +65,7 @@ fun RacingFilters(raceSelectState: RaceSelectState, onRaceSelect: (RaceSelectSta
         RacingFilterItem(
             selectedStatus = selectedStatus.grayHoundSelected,
             raceType = stringResource(id = R.string.gray_hound),
+            isNotCompact = isNotCompact,
             iconContentDescription = ContentDescriptionUtil.GRAY_HOUND_SELECT,
             containerContentDescription = ContentDescriptionUtil.GRAY_HOUND_BUTTON
         ) {
@@ -68,6 +77,7 @@ fun RacingFilters(raceSelectState: RaceSelectState, onRaceSelect: (RaceSelectSta
         RacingFilterItem(
             selectedStatus = selectedStatus.harnessSelected,
             raceType = stringResource(id = R.string.harness),
+            isNotCompact = isNotCompact,
             iconContentDescription = ContentDescriptionUtil.HARNESS_SELECT,
             containerContentDescription = ContentDescriptionUtil.HARNESS_BUTTON
         ) {
@@ -82,6 +92,7 @@ fun RacingFilters(raceSelectState: RaceSelectState, onRaceSelect: (RaceSelectSta
 @Composable
 fun RacingFilterItem(
     selectedStatus: Boolean,
+    isNotCompact: Boolean,
     raceType: String,
     containerContentDescription: String,
     iconContentDescription: String,
@@ -95,7 +106,7 @@ fun RacingFilterItem(
         label = {
             Text(
                 text = raceType,
-                style = MaterialTheme.typography.bodyMedium
+                style = if (isNotCompact) MaterialTheme.typography.bodyLarge else MaterialTheme.typography.bodyMedium
             )
         },
         leadingIcon = {
@@ -106,9 +117,11 @@ fun RacingFilterItem(
                 )
             }
         },
-        modifier = Modifier.semantics {
-            contentDescription = containerContentDescription
-        }
+        modifier = Modifier
+            .height(if (isNotCompact) FILTER_HEIGHT_LARGE else FILTER_HEIGHT_COMPACT)
+            .semantics {
+                contentDescription = containerContentDescription
+            }
     )
 }
 
@@ -116,7 +129,7 @@ fun RacingFilterItem(
 @Composable
 fun ShowRacingFilters() {
     EntainTheme {
-        RacingFilters(RaceCombinations.getNoRaceSelected) {
+        RacingFilters(RaceCombinations.getNoRaceSelected, false) {
 
         }
     }
